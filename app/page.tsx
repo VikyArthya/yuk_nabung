@@ -1,7 +1,17 @@
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { authOptions } from "@/lib/auth";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function Home() {
+export default async function Home() {
+  const session = await getServerSession(authOptions);
+
+  // Redirect to dashboard if user is already logged in
+  if (session) {
+    redirect("/dashboard");
+  }
+
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header */}
