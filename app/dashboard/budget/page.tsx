@@ -138,10 +138,10 @@ export default function BudgetPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-white flex items-center justify-center">
+      <div className="min-h-screen neo-yellow flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-500 mx-auto mb-4"></div>
-          <p className="text-gray-500">Memuat data budget...</p>
+          <div className="animate-spin rounded-full h-8 w-8 border-b-4 border-black mx-auto mb-4"></div>
+          <p className="neo-text">Memuat data budget...</p>
         </div>
       </div>
     );
@@ -152,22 +152,22 @@ export default function BudgetPage() {
   const currentYear = currentDate.getFullYear();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-white">
+    <div className="min-h-screen neo-yellow">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-sm border-b border-orange-200 shadow-sm">
+      <header className="bg-white border-b-4 border-black">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
               <Link href="/dashboard">
-                <Button variant="outline" className="border-orange-500 text-orange-500 hover:bg-orange-50">← Kembali</Button>
+                <Button variant="outline">← Kembali</Button>
               </Link>
-              <h1 className="text-2xl font-bold text-gray-900">
-                <span className="text-orange-500">📊</span> Kelola Budget
+              <h1 className="neo-heading text-2xl">
+                <span>📊</span> Kelola Budget
               </h1>
             </div>
             <div className="space-x-4">
               <Link href="/dashboard/budget/create">
-                <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0">Buat Budget</Button>
+                <Button className="neo-orange text-white">Buat Budget</Button>
               </Link>
               <SignOutButton />
             </div>
@@ -178,40 +178,40 @@ export default function BudgetPage() {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {/* Current Month Status */}
-        <Card className="mb-8 border-orange-100">
-          <CardHeader className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-t-lg">
-            <CardTitle className="text-orange-700">📅 Status Budget {monthNames[currentMonth - 1]} {currentYear}</CardTitle>
-            <CardDescription className="text-orange-600">
+        <Card className="mb-8 neo-card-raised">
+          <CardHeader className="neo-yellow border-b-4 border-black">
+            <CardTitle className="neo-heading">📅 Status Budget {monthNames[currentMonth - 1]} {currentYear}</CardTitle>
+            <CardDescription className="neo-text">
               Overview budget bulan ini
             </CardDescription>
           </CardHeader>
           <CardContent>
             {currentMonthBudget ? (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="text-center p-4 bg-green-50 rounded-lg border border-green-200">
-                  <div className="text-2xl font-bold text-green-600">
+                <div className="text-center p-4 neo-green text-white neo-border neo-shadow">
+                  <div className="text-2xl font-black">
                     Rp {currentMonthBudget.salary.toLocaleString('id-ID')}
                   </div>
-                  <p className="text-sm text-gray-500">Gaji</p>
+                  <p className="text-sm font-medium">Gaji</p>
                 </div>
-                <div className="text-center p-4 bg-orange-50 rounded-lg border border-orange-200">
-                  <div className="text-2xl font-bold text-orange-600">
+                <div className="text-center p-4 neo-orange text-white neo-border neo-shadow">
+                  <div className="text-2xl font-black">
                     Rp {currentMonthBudget.savingTarget.toLocaleString('id-ID')}
                   </div>
-                  <p className="text-sm text-gray-500">Target Nabung</p>
+                  <p className="text-sm font-medium">Target Nabung</p>
                 </div>
-                <div className="text-center p-4 bg-red-50 rounded-lg border border-red-200">
-                  <div className="text-2xl font-bold text-red-600">
+                <div className="text-center p-4 neo-red text-white neo-border neo-shadow">
+                  <div className="text-2xl font-black">
                     Rp {currentMonthBudget.spendingTarget.toLocaleString('id-ID')}
                   </div>
-                  <p className="text-sm text-gray-500">Target Pengeluaran</p>
+                  <p className="text-sm font-medium">Target Pengeluaran</p>
                 </div>
               </div>
             ) : (
               <div className="text-center">
-                <p className="text-gray-500 mb-4">Belum ada budget untuk bulan ini</p>
+                <p className="neo-text mb-4">Belum ada budget untuk bulan ini</p>
                 <Link href="/dashboard/budget/create">
-                  <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0">Buat Budget {monthNames[currentMonth - 1]}</Button>
+                  <Button className="neo-orange text-white">Buat Budget {monthNames[currentMonth - 1]}</Button>
                 </Link>
               </div>
             )}
@@ -219,10 +219,10 @@ export default function BudgetPage() {
         </Card>
 
         {/* Budget List */}
-        <Card className="border-orange-100">
-          <CardHeader className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-t-lg">
-            <CardTitle className="text-orange-700">📋 Daftar Budget {currentYear}</CardTitle>
-            <CardDescription className="text-orange-600">
+        <Card className="neo-card-raised">
+          <CardHeader className="neo-yellow border-b-4 border-black">
+            <CardTitle className="neo-heading">📋 Daftar Budget {currentYear}</CardTitle>
+            <CardDescription className="neo-text">
               Semua budget yang telah dibuat tahun ini
             </CardDescription>
           </CardHeader>
@@ -236,35 +236,36 @@ export default function BudgetPage() {
                   const spendingProgress = expensesData?.spendingProgress || 0;
 
                   return (
-                    <div key={budget.id} className="border border-orange-200 rounded-lg p-4 hover:bg-orange-50 transition-colors">
+                    <div key={budget.id} className="bg-white border-2 border-black shadow-[4px_4px_0px_black] p-4 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
                       <div className="flex justify-between items-start mb-3">
                         <div>
-                          <h3 className="font-medium text-lg text-orange-700">
+                          <h3 className="font-black text-lg">
                             {monthNames[budget.month - 1]} {budget.year}
                           </h3>
-                          <div className="text-sm text-gray-500 mt-1">
+                          <div className="neo-text text-sm mt-1">
                             Gaji: Rp {budget.salary.toLocaleString('id-ID')} •
                             Target Nabung: Rp {budget.savingTarget.toLocaleString('id-ID')}
                           </div>
                         </div>
                         <div className="flex space-x-2">
                           <Link href={`/dashboard/budget/${budget.id}/edit`}>
-                            <Button variant="outline" size="sm" className="border-blue-500 text-blue-500 hover:bg-blue-50">
+                            <Button variant="outline" size="sm">
                               ✏️ Edit
                             </Button>
                           </Link>
                           <Link href={`/dashboard/budget/${budget.id}`}>
-                            <Button variant="outline" size="sm" className="border-orange-500 text-orange-500 hover:bg-orange-50">Detail</Button>
+                            <Button variant="outline" size="sm">
+                              Detail
+                            </Button>
                           </Link>
                           <Button
                             variant="outline"
                             size="sm"
                             onClick={() => handleDeleteBudget(budget.id)}
                             disabled={deletingId === budget.id}
-                            className="border-red-500 text-red-500 hover:bg-red-50"
                           >
                             {deletingId === budget.id ? (
-                              <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-red-500"></span>
+                              <span className="animate-spin rounded-full h-4 w-4 border-b-2 border-black"></span>
                             ) : (
                               "🗑️ Hapus"
                             )}
@@ -275,36 +276,36 @@ export default function BudgetPage() {
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-3">
                         <div>
                           <div className="flex justify-between text-sm mb-1">
-                            <span>Progress Pengeluaran:</span>
-                            <span className="font-medium text-orange-600">{spendingProgress.toFixed(1)}%</span>
+                            <span className="font-bold">Progress Pengeluaran:</span>
+                            <span className="font-black">{spendingProgress.toFixed(1)}%</span>
                           </div>
-                          <div className="w-full bg-orange-100 rounded-full h-2">
+                          <div className="w-full bg-yellow-100 border-2 border-black h-4">
                             <div
-                              className={`h-2 rounded-full transition-all duration-300 ${
-                                spendingProgress > 100 ? 'bg-red-500' :
-                                spendingProgress > 80 ? 'bg-orange-400' : 'bg-green-500'
+                              className={`h-4 border-r-2 border-black transition-all duration-300 ${
+                                spendingProgress > 100 ? 'neo-red' :
+                                spendingProgress > 80 ? 'neo-orange' : 'neo-green'
                               }`}
                               style={{ width: `${Math.min(spendingProgress, 100)}%` }}
                             ></div>
                           </div>
                         </div>
                         <div className="text-sm">
-                          <span className="text-gray-500">Terpakai: </span>
-                          <span className="font-medium text-orange-600">
+                          <span className="font-bold">Terpakai: </span>
+                          <span className="font-black">
                             Rp {totalSpent.toLocaleString('id-ID')}
                           </span>
                         </div>
                         <div className="text-sm">
-                          <span className="text-gray-500">Target: </span>
-                          <span className="font-medium">
+                          <span className="font-bold">Target: </span>
+                          <span className="font-black">
                             Rp {budget.spendingTarget.toLocaleString('id-ID')}
                           </span>
                         </div>
                       </div>
 
-                      <div className="flex justify-between items-center text-sm text-gray-500">
-                        <span>{budget.weeklyBudgets.length} minggu aktif</span>
-                        <span>{budget.allocations.length} alokasi dompet</span>
+                      <div className="flex justify-between items-center text-sm neo-text">
+                        <span className="font-bold">{budget.weeklyBudgets.length} minggu aktif</span>
+                        <span className="font-bold">{budget.allocations.length} alokasi dompet</span>
                       </div>
                     </div>
                   );
@@ -312,15 +313,15 @@ export default function BudgetPage() {
               </div>
             ) : (
               <div className="text-center py-12">
-                <div className="text-6xl mb-4 text-orange-500">📊</div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <div className="text-6xl mb-4">📊</div>
+                <h3 className="neo-subheading mb-2">
                   Belum ada budget
                 </h3>
-                <p className="text-gray-500 mb-6">
+                <p className="neo-text mb-6">
                   Mulai dengan membuat budget untuk bulan ini
                 </p>
                 <Link href="/dashboard/budget/create">
-                  <Button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0">Buat Budget Pertama</Button>
+                  <Button className="neo-orange text-white">Buat Budget Pertama</Button>
                 </Link>
               </div>
             )}
@@ -328,36 +329,36 @@ export default function BudgetPage() {
         </Card>
 
         {/* Quick Tips */}
-        <Card className="mt-8 border-orange-100">
-          <CardHeader className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-t-lg">
-            <CardTitle className="text-orange-700">💡 Tips Budget</CardTitle>
-            <CardDescription className="text-orange-600">
+        <Card className="mt-8 neo-card-raised">
+          <CardHeader className="neo-yellow border-b-4 border-black">
+            <CardTitle className="neo-heading">💡 Tips Budget</CardTitle>
+            <CardDescription className="neo-text">
               Beberapa tips untuk mengelola budget dengan efektif
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-4 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors">
-                <h4 className="font-medium mb-2 text-orange-700">💰 50/30/20 Rule</h4>
-                <p className="text-sm text-gray-600">
+              <div className="p-4 bg-white border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
+                <h4 className="font-black mb-2">💰 50/30/20 Rule</h4>
+                <p className="neo-text text-sm">
                   Alokasikan 50% untuk kebutuhan, 30% untuk keinginan, dan 20% untuk tabungan
                 </p>
               </div>
-              <div className="p-4 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors">
-                <h4 className="font-medium mb-2 text-orange-700">📈 Track Pengeluaran</h4>
-                <p className="text-sm text-gray-600">
+              <div className="p-4 bg-white border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
+                <h4 className="font-black mb-2">📈 Track Pengeluaran</h4>
+                <p className="neo-text text-sm">
                   Catat setiap pengeluaran untuk memantau budget tetap on track
                 </p>
               </div>
-              <div className="p-4 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors">
-                <h4 className="font-medium mb-2 text-orange-700">🎯 Set Realistic Goals</h4>
-                <p className="text-sm text-gray-600">
+              <div className="p-4 bg-white border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
+                <h4 className="font-black mb-2">🎯 Set Realistic Goals</h4>
+                <p className="neo-text text-sm">
                   Buat target yang realistis sesuai dengan penghasilan dan gaya hidup
                 </p>
               </div>
-              <div className="p-4 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors">
-                <h4 className="font-medium mb-2 text-orange-700">🔄 Review Rutin</h4>
-                <p className="text-sm text-gray-600">
+              <div className="p-4 bg-white border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
+                <h4 className="font-black mb-2">🔄 Review Rutin</h4>
+                <p className="neo-text text-sm">
                   Review budget mingguan untuk melakukan penyesuaian jika diperlukan
                 </p>
               </div>

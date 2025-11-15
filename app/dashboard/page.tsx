@@ -263,17 +263,17 @@ export default async function DashboardPage() {
   // If user has no budget, show welcome screen
   if (!dashboardData.hasBudget) {
     return (
-      <div className="bg-gradient-to-br from-orange-50 via-yellow-50 to-white min-h-screen">
+      <div className="bg-yellow-200 min-h-screen">
         {/* Header */}
-        <div className="bg-white/90 backdrop-blur-sm border-b border-orange-200">
-          <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+        <div className="neo-border-b-4 border-black bg-white">
+          <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center space-x-3">
-                  <span className="text-orange-500">🍽️</span>
+                <h1 className="neo-heading text-3xl sm:text-5xl flex items-center space-x-4">
+                  <span className="text-4xl sm:text-5xl">🍽️</span>
                   <span>Dashboard Makan</span>
                 </h1>
-                <p className="text-gray-600 mt-1">Halo, {dashboardData.user.name}! 👋</p>
+                <p className="neo-text text-lg mt-2">Halo, {dashboardData.user.name}! 👋</p>
               </div>
               <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
                 <SignOutButton />
@@ -286,15 +286,15 @@ export default async function DashboardPage() {
         <main className="max-w-4xl mx-auto py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
           <div className="text-center space-y-8">
             {/* Welcome Card */}
-            <Card className="border-orange-100">
-              <CardHeader className="pb-6 sm:pb-8">
+            <Card className="neo-card-raised">
+              <CardHeader className="pb-6 sm:pb-8 neo-yellow border-b-4 border-black">
                 <div className="space-y-4">
                   <div className="text-6xl">🎯</div>
                   <div>
-                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                    <h2 className="neo-heading text-xl sm:text-2xl">
                       Selamat Datang di Nabung App!
                     </h2>
-                    <p className="text-gray-600 mt-2">
+                    <p className="neo-text mt-2">
                       Mulai perjalanan tracking pengeluaran makan Anda hari ini
                     </p>
                   </div>
@@ -304,51 +304,45 @@ export default async function DashboardPage() {
                 <div className="space-y-6">
                   {/* Info Cards */}
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <Card className="bg-blue-50 border-blue-200">
-                      <CardContent className="pt-6 text-center">
+                    <div className="bg-white border-2 border-black shadow-[4px_4px_0px_black] p-6 text-center neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
                         <div className="text-3xl mb-3">💰</div>
-                        <h3 className="font-semibold text-blue-900 mb-2">
+                        <h3 className="font-black mb-2">
                           Budget Harian Dinamis
                         </h3>
-                        <p className="text-sm text-blue-700">
+                        <p className="neo-text text-sm">
                           Daily budget akan otomatis dihitung dari weekly budget yang Anda buat
                         </p>
-                      </CardContent>
-                    </Card>
+                    </div>
 
-                    <Card className="bg-green-50 border-green-200">
-                      <CardContent className="pt-6 text-center">
-                        <div className="text-3xl mb-3">📊</div>
-                        <h3 className="font-semibold text-green-900 mb-2">
-                          Tracking Real-time
-                        </h3>
-                        <p className="text-sm text-green-700">
-                          Pantau pengeluaran dan sisa budget secara real-time
-                        </p>
-                      </CardContent>
-                    </Card>
+                    <div className="bg-white border-2 border-black shadow-[4px_4px_0px_black] p-6 text-center neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
+                      <div className="text-3xl mb-3">📊</div>
+                      <h3 className="font-black mb-2">
+                        Tracking Real-time
+                      </h3>
+                      <p className="neo-text text-sm">
+                        Pantau pengeluaran dan sisa budget secara real-time
+                      </p>
+                    </div>
                   </div>
 
-                  <Card className="bg-yellow-50 border-yellow-200">
-                    <CardContent className="pt-6 text-center">
+                  <div className="bg-white border-2 border-black shadow-[4px_4px_0px_black] p-6 text-center neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
                       <div className="text-3xl mb-3">🚀</div>
-                      <h3 className="font-semibold text-yellow-900 mb-2">
+                      <h3 className="font-black mb-2">
                         Siap Memulai!
                       </h3>
-                      <p className="text-sm text-yellow-700">
+                      <p className="neo-text text-sm">
                         Buat budget bulanan untuk mulai tracking
                       </p>
-                    </CardContent>
-                  </Card>
+                    </div>
 
                   {/* CTA Button */}
                   <div className="space-y-4">
                     <Link href="/dashboard/budget/create">
-                      <Button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0 text-lg py-3 px-6">
+                      <Button className="w-full neo-orange text-white text-lg py-3 px-6">
                         📋 Buat Budget Pertama
                       </Button>
                     </Link>
-                    <p className="text-sm text-gray-500">
+                    <p className="neo-text text-sm">
                       Atau buat dompet terlebih di{' '}
                       <Link href="/dashboard/wallets" className="text-orange-600 hover:underline">
                         menu dompet
@@ -357,19 +351,19 @@ export default async function DashboardPage() {
                   </div>
 
                   {/* Tips */}
-                  <Card className="bg-gray-50 border-gray-200">
-                    <CardHeader className="pb-4">
-                      <h4 className="font-semibold text-gray-800">💡 Tips Memulai</h4>
-                    </CardHeader>
-                    <CardContent className="pt-0">
-                      <ul className="text-sm text-gray-600 space-y-2 text-left">
+                  <div className="bg-white border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
+                    <div className="p-4 border-b-4 border-black">
+                      <h4 className="font-black">💡 Tips Memulai</h4>
+                    </div>
+                    <div className="p-4 pt-0">
+                      <ul className="neo-text text-sm space-y-2 text-left font-bold">
                         <li>• Buat budget bulanan dengan gaji dan target pengeluaran</li>
                         <li>• Daily budget otomatis dihitung: weekly budget ÷ 7 hari</li>
                         <li>• Catat setiap pengeluaran makan untuk tracking</li>
                         <li>• Lihat sisa budget dan tabungan yang terkumpul</li>
                       </ul>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </div>
                 </div>
               </CardContent>
             </Card>
@@ -380,17 +374,17 @@ export default async function DashboardPage() {
   }
 
   return (
-    <div className="bg-gradient-to-br from-orange-50 via-yellow-50 to-white min-h-screen">
+    <div className="neo-yellow min-h-screen">
       {/* Dashboard Header */}
-      <div className="bg-white/90 backdrop-blur-sm border-b border-orange-200">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+      <div className="neo-border-b-4 border-black bg-white">
+        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center space-x-3">
-                <span className="text-orange-500">🍽️</span>
+              <h1 className="neo-heading text-3xl sm:text-5xl flex items-center space-x-4">
+                <span className="text-4xl sm:text-5xl">🍽️</span>
                 <span>Dashboard Makan</span>
               </h1>
-              <p className="text-gray-600 mt-1">Halo, {dashboardData.user.name}! 👋</p>
+              <p className="neo-text text-lg mt-2">Halo, {dashboardData.user.name}! 👋</p>
             </div>
             <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
               <SignOutButton />
@@ -403,32 +397,32 @@ export default async function DashboardPage() {
       <main className="max-w-7xl mx-auto py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Daily Budget Card */}
-          <Card className="md:col-span-1 hover:shadow-lg transition-shadow border-orange-100">
-            <CardHeader className="pb-3 sm:pb-6 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-t-lg">
-              <CardTitle className="text-base sm:text-lg text-orange-700">💰 Budget Harian</CardTitle>
-              <CardDescription className="text-xs sm:text-sm text-orange-600">
+          <Card className="md:col-span-1 neo-card-raised">
+            <CardHeader className="pb-3 sm:pb-6 neo-yellow">
+              <CardTitle className="text-base sm:text-lg neo-heading text-black">💰 Budget Harian</CardTitle>
+              <CardDescription className="text-xs sm:text-sm neo-text">
                 {new Date().toLocaleDateString('id-ID')}
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-0 sm:pt-0">
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm">Total Budget:</span>
-                  <span className="font-medium text-xs sm:text-sm">Rp {dashboardData.user.dailyBudget.toLocaleString('id-ID')}</span>
+                  <span className="text-xs sm:text-sm font-bold">Total Budget:</span>
+                  <span className="font-black text-xs sm:text-sm">Rp {dashboardData.user.dailyBudget.toLocaleString('id-ID')}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm">Sisa Budget:</span>
-                  <span className={`font-medium text-xs sm:text-sm ${
-                    dashboardData.daily.remaining < 0 ? 'text-red-600' : 'text-green-600'
+                  <span className="text-xs sm:text-sm font-bold">Sisa Budget:</span>
+                  <span className={`font-black text-xs sm:text-sm ${
+                    (dashboardData.daily?.remaining || 0) < 0 ? 'text-red-600' : 'text-green-600'
                   }`}>
-                    Rp {Math.abs(dashboardData.daily.remaining).toLocaleString('id-ID')}
-                    {dashboardData.daily.remaining < 0 && " (lebih)"}
+                    Rp {Math.abs(dashboardData.daily?.remaining || 0).toLocaleString('id-ID')}
+                    {(dashboardData.daily?.remaining || 0) < 0 && " (lebih)"}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm">Sudah Dipakai:</span>
-                  <span className="font-medium text-xs sm:text-sm text-red-600">
-                    Rp {dashboardData.daily.spent.toLocaleString('id-ID')}
+                  <span className="text-xs sm:text-sm font-bold">Sudah Dipakai:</span>
+                  <span className="font-black text-xs sm:text-sm text-red-600">
+                    Rp {(dashboardData.daily?.spent || 0).toLocaleString('id-ID')}
                   </span>
                 </div>
               </div>
@@ -436,31 +430,33 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Weekly Summary Card */}
-          <Card className="md:col-span-1 hover:shadow-lg transition-shadow border-orange-100">
-            <CardHeader className="pb-3 sm:pb-6 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-t-lg">
-              <CardTitle className="text-base sm:text-lg text-orange-700">📅 Ringkasan Mingguan</CardTitle>
-              <CardDescription className="text-xs sm:text-sm text-orange-600">
-                {new Date(dashboardData.weekly.weekStart).toLocaleDateString('id-ID', { day: 'numeric', month: 'numeric', year: 'numeric' })} - {new Date(dashboardData.weekly.weekEnd).toLocaleDateString('id-ID', { day: 'numeric', month: 'numeric', year: 'numeric' })}
+          <Card className="md:col-span-1 neo-card-raised">
+            <CardHeader className="pb-3 sm:pb-6 neo-blue">
+              <CardTitle className="text-base sm:text-lg neo-heading text-white">📅 Ringkasan Mingguan</CardTitle>
+              <CardDescription className="text-xs sm:text-sm neo-text text-white">
+                {dashboardData.weekly ?
+                  `${new Date(dashboardData.weekly.weekStart).toLocaleDateString('id-ID', { day: 'numeric', month: 'numeric', year: 'numeric' })} - ${new Date(dashboardData.weekly.weekEnd).toLocaleDateString('id-ID', { day: 'numeric', month: 'numeric', year: 'numeric' })}`
+                  : "Data mingguan tidak tersedia"}
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-0 sm:pt-0">
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm">Total Pengeluaran:</span>
-                  <span className="font-medium text-xs sm:text-sm text-red-600">
-                    Rp {dashboardData.weekly.totalExpenses.toLocaleString('id-ID')}
+                  <span className="text-xs sm:text-sm font-bold text-white">Total Pengeluaran:</span>
+                  <span className="font-black text-xs sm:text-sm text-white">
+                    Rp {(dashboardData.weekly?.totalExpenses || 0).toLocaleString('id-ID')}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm">Rata-rata/hari:</span>
-                  <span className="font-medium text-xs sm:text-sm">
-                    Rp {dashboardData.weekly.dailyAverage.toLocaleString('id-ID')}
+                  <span className="text-xs sm:text-sm font-bold text-white">Rata-rata/hari:</span>
+                  <span className="font-black text-xs sm:text-sm text-white">
+                    Rp {(dashboardData.weekly?.dailyAverage || 0).toLocaleString('id-ID')}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm">Sisa Mingguan:</span>
-                  <span className="font-medium text-xs sm:text-sm text-green-600">
-                    Rp {dashboardData.weekly.weeklyLeftover.toLocaleString('id-ID')}
+                  <span className="text-xs sm:text-sm font-bold text-white">Sisa Mingguan:</span>
+                  <span className="font-black text-xs sm:text-sm text-white">
+                    Rp {(dashboardData.weekly?.weeklyLeftover || 0).toLocaleString('id-ID')}
                   </span>
                 </div>
               </div>
@@ -468,19 +464,19 @@ export default async function DashboardPage() {
           </Card>
 
           {/* Total Savings Card */}
-          <Card className="md:col-span-1 hover:shadow-lg transition-shadow border-orange-100">
-            <CardHeader className="pb-3 sm:pb-6 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-t-lg">
-              <CardTitle className="text-base sm:text-lg text-orange-700">💳 Total Tabungan</CardTitle>
-              <CardDescription className="text-xs sm:text-sm text-orange-600">
+          <Card className="md:col-span-1 neo-card-raised">
+            <CardHeader className="pb-3 sm:pb-6 neo-green">
+              <CardTitle className="text-base sm:text-lg neo-heading text-white">💳 Total Tabungan</CardTitle>
+              <CardDescription className="text-xs sm:text-sm neo-text text-white">
                 Akumulasi dari sisa budget
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-0 sm:pt-0">
-              <div className="text-xl sm:text-2xl font-bold text-green-600 break-all">
+              <div className="text-xl sm:text-2xl font-black text-black break-all">
                 Rp {dashboardData.user.savingsBalance.toLocaleString('id-ID')}
               </div>
-              <p className="text-xs sm:text-sm text-gray-500 mt-1">
-                {dashboardData.weekly.transferredToSavings ? "Sudah ditransfer minggu ini" : "Menunggu transfer mingguan"}
+              <p className="text-xs sm:text-sm neo-text mt-1">
+                {dashboardData.weekly?.transferredToSavings ? "Sudah ditransfer minggu ini" : "Menunggu transfer mingguan"}
               </p>
             </CardContent>
           </Card>
@@ -492,10 +488,13 @@ export default async function DashboardPage() {
 
           {/* Daily Expenses List */}
           <DailyExpensesList
-            expenses={dashboardData.daily.expenses}
-            budgetRemaining={dashboardData.daily.remaining}
-            dailyBudget={dashboardData.daily.budget}
-            totalExpense={dashboardData.daily.spent}
+            expenses={dashboardData.daily?.expenses?.map(expense => ({
+              ...expense,
+              date: expense.date.toISOString()
+            })) || []}
+            budgetRemaining={dashboardData.daily?.remaining || 0}
+            dailyBudget={dashboardData.daily?.budget || 0}
+            totalExpense={dashboardData.daily?.spent || 0}
           />
         </div>
       </main>

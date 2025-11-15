@@ -3,6 +3,8 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface Wallet {
   id: string;
@@ -178,11 +180,11 @@ export default function EditBudgetForm({
       {/* Budget Period */}
       <div className="grid grid-cols-2 gap-4">
         <div className="space-y-2">
-          <label className="text-sm font-medium">Bulan</label>
+          <Label>Bulan</Label>
           <select
             value={formData.month}
             onChange={(e) => handleInputChange("month", e.target.value)}
-            className="w-full p-2 border rounded-md"
+            className="w-full neo-select"
             required
           >
             {monthNames.map((name, index) => (
@@ -193,14 +195,13 @@ export default function EditBudgetForm({
           </select>
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium">Tahun</label>
-          <input
+          <Label>Tahun</Label>
+          <Input
             type="number"
             min="2024"
             max="2030"
             value={formData.year}
             onChange={(e) => handleInputChange("year", e.target.value)}
-            className="w-full p-2 border rounded-md"
             required
           />
         </div>
@@ -208,56 +209,53 @@ export default function EditBudgetForm({
 
       {/* Income and Targets */}
       <div className="space-y-4">
-        <h3 className="text-lg font-medium">Penghasilan dan Target</h3>
+        <h3 className="neo-subheading">Penghasilan dan Target</h3>
 
         <div className="space-y-2">
-          <label className="text-sm font-medium">Gaji Bulanan</label>
-          <input
+          <Label>Gaji Bulanan</Label>
+          <Input
             type="number"
             placeholder="3500000"
             step="10000"
             min="0"
             value={formData.salary}
             onChange={(e) => handleInputChange("salary", e.target.value)}
-            className="w-full p-2 border rounded-md"
             required
           />
-          <p className="text-sm text-gray-500">
+          <p className="neo-text text-sm">
             Total penghasilan bulanan Anda
           </p>
         </div>
 
         <div className="grid grid-cols-2 gap-4">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Target Nabung</label>
-            <input
+            <Label>Target Nabung</Label>
+            <Input
               type="number"
               placeholder="2000000"
               step="10000"
               min="0"
               value={formData.savingTarget}
               onChange={(e) => handleInputChange("savingTarget", e.target.value)}
-              className="w-full p-2 border rounded-md"
               required
             />
-            <p className="text-sm text-gray-500">
+            <p className="neo-text text-sm">
               Disarankan 20% dari gaji
             </p>
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">Target Pengeluaran</label>
-            <input
+            <Label>Target Pengeluaran</Label>
+            <Input
               type="number"
               placeholder="1500000"
               step="10000"
               min="0"
               value={formData.spendingTarget}
               onChange={(e) => handleInputChange("spendingTarget", e.target.value)}
-              className="w-full p-2 border rounded-md"
               required
             />
-            <p className="text-sm text-gray-500">
+            <p className="neo-text text-sm">
               Sisa setelah nabung
             </p>
           </div>

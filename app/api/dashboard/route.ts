@@ -133,7 +133,6 @@ export async function GET() {
     // Calculate weekly summary
     const totalWeeklyExpenses = weeklyExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
     const daysIntoWeek = getDaysIntoWeek(today);
-    const weeklyBudgetAmount = currentBudget ? Number(currentBudget.weeklyBudget) : 0;
     const weeklyLeftover = weeklyBudgetAmount - totalWeeklyExpenses;
     const dailyAverage = totalWeeklyExpenses > 0 ? totalWeeklyExpenses / daysIntoWeek : 0;
 
@@ -177,10 +176,10 @@ export async function GET() {
       },
       daily: {
         budget: calculatedDailyBudget,
-        remaining: Number(todayRecord.dailyBudgetRemaining),
-        spent: Number(todayRecord.totalExpense),
-        leftover: Number(todayRecord.leftover),
-        isOverBudget: Number(todayRecord.dailyBudgetRemaining) < 0,
+        remaining: Number(todayRecord!.dailyBudgetRemaining),
+        spent: Number(todayRecord!.totalExpense),
+        leftover: Number(todayRecord!.leftover),
+        isOverBudget: Number(todayRecord!.dailyBudgetRemaining) < 0,
         expenses: todayExpenses.map(expense => ({
           id: expense.id,
           amount: Number(expense.amount),

@@ -5,12 +5,10 @@ import { prisma } from "@/lib/prisma";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    // For now, we'll skip auth check and use a simple user lookup
-    // In production, you should implement proper authentication
-    // This is a temporary fix for testing
+    const resolvedParams = await params;
     const session = await getServerSession(authOptions);
 
     if (!session) {
@@ -20,7 +18,7 @@ export async function GET(
     // Verify budget belongs to user
     const budget = await prisma.budget.findFirst({
       where: {
-        id: params.id,
+        id: resolvedParams.id,
         userId: session.user.id,
       },
     });

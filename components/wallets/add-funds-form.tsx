@@ -88,7 +88,7 @@ export default function AddFundsForm({ walletId, currentBalance, walletName }: A
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
           required
-          className="border-orange-200 focus:border-orange-500 focus:ring-orange-500"
+          className="neo-input"
         />
         <p className="text-sm text-gray-500">
           Masukkan nominal yang ingin ditambahkan ke dompet
@@ -96,10 +96,10 @@ export default function AddFundsForm({ walletId, currentBalance, walletName }: A
       </div>
 
       {/* Current Balance Display */}
-      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <div className="neo-blue text-white p-4 neo-border neo-shadow">
         <div className="flex justify-between items-center">
-          <span className="text-sm font-medium text-blue-700">Saldo Saat Ini:</span>
-          <span className="font-medium text-blue-900">
+          <span className="text-sm font-black">Saldo Saat Ini:</span>
+          <span className="font-black">
             Rp {currentBalance.toLocaleString('id-ID')}
           </span>
         </div>
@@ -113,10 +113,10 @@ export default function AddFundsForm({ walletId, currentBalance, walletName }: A
 
       {message && (
         <div
-          className={`p-3 rounded-lg text-sm ${
+          className={`p-3 text-sm font-black ${
             message.type === "success"
-              ? "bg-green-50 text-green-700 border border-green-200"
-              : "bg-red-50 text-red-700 border border-red-200"
+              ? "neo-green text-white neo-border neo-shadow"
+              : "neo-red text-white neo-border neo-shadow"
           }`}
         >
           {message.text}
@@ -127,7 +127,8 @@ export default function AddFundsForm({ walletId, currentBalance, walletName }: A
         <Button
           type="submit"
           disabled={isLoading || !amount}
-          className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0"
+          className="flex-1 neo-orange text-white"
+          variant="default"
         >
           {isLoading ? "Memproses..." : "Tambah Saldo"}
         </Button>
@@ -136,7 +137,6 @@ export default function AddFundsForm({ walletId, currentBalance, walletName }: A
           variant="outline"
           onClick={() => router.back()}
           disabled={isLoading}
-          className="border-orange-500 text-orange-500 hover:bg-orange-50"
         >
           Batal
         </Button>

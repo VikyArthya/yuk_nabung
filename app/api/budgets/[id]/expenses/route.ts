@@ -53,7 +53,7 @@ export async function GET(
 
     // Calculate total spent
     const totalSpent = expenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
-    const spendingProgress = budget.spendingTarget > 0
+    const spendingProgress = Number(budget.spendingTarget) > 0
       ? (totalSpent / Number(budget.spendingTarget)) * 100
       : 0;
 

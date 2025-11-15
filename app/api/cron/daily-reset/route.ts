@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
         // Calculate leftover from yesterday
         const leftover = yesterdayRecord.leftover;
 
-        if (leftover > 0) {
+        if (Number(leftover) > 0) {
           // Add leftover to weekly record
           const weekStart = getWeekStart(yesterday);
           const weekEnd = getWeekEnd(yesterday);

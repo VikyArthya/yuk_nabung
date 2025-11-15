@@ -41,17 +41,17 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex items-center justify-center bg-yellow-100 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+          <h2 className="mt-6 text-center neo-heading text-3xl">
             Masuk ke Aplikasi Menabung
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
+          <p className="mt-2 text-center neo-text text-sm">
             Atau{" "}
             <Link
               href="/register"
-              className="font-medium text-primary hover:text-primary/90"
+              className="font-bold text-blue-600 hover:text-blue-800 underline decoration-4 underline-offset-2 neo-inline-link"
             >
               buat akun baru
             </Link>
@@ -59,7 +59,7 @@ export default function LoginPage() {
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+            <div className="neo-red text-white px-4 py-3 neo-border neo-shadow-lg font-black text-sm">
               {error}
             </div>
           )}

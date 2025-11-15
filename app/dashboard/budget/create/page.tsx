@@ -41,17 +41,17 @@ export default async function CreateBudgetPage() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-white">
+    <div className="min-h-screen neo-yellow">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-sm border-b border-orange-200 shadow-sm">
+      <header className="bg-white border-b-4 border-black">
         <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center">
             <div className="flex items-center space-x-4">
               <Link href="/dashboard/budget">
-                <Button variant="outline" className="border-orange-500 text-orange-500 hover:bg-orange-50">← Kembali</Button>
+                <Button variant="outline">← Kembali</Button>
               </Link>
-              <h1 className="text-2xl font-bold text-gray-900">
-                <span className="text-orange-500">📊</span> Buat Budget Baru
+              <h1 className="neo-heading text-2xl">
+                <span>📊</span> Buat Budget Baru
               </h1>
             </div>
             <SignOutButton />
@@ -61,10 +61,10 @@ export default async function CreateBudgetPage() {
 
       {/* Main Content */}
       <main className="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <Card className="border-orange-100">
-          <CardHeader className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-t-lg">
-            <CardTitle className="text-orange-700">📅 Buat Budget Bulanan</CardTitle>
-            <CardDescription className="text-orange-600">
+        <Card className="neo-card-raised">
+          <CardHeader className="neo-yellow border-b-4 border-black">
+            <CardTitle className="neo-heading">📅 Buat Budget Bulanan</CardTitle>
+            <CardDescription className="neo-text">
               Atur gaji, target nabung, dan alokasi dompet untuk bulan {monthNames[currentMonth - 1]} {currentYear}
             </CardDescription>
           </CardHeader>

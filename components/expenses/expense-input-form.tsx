@@ -143,7 +143,7 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
                 value={walletId}
                 onChange={(e) => setWalletId(e.target.value)}
                 required
-                className="w-full px-3 py-2 border border-orange-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
+                className="w-full neo-select text-sm"
               >
                 <option value="">Pilih dompet...</option>
                 {wallets.map((wallet) => (

@@ -1,21 +1,18 @@
-import { withAuth } from "next-auth/middleware";
+import { getToken } from "next-auth/jwt";
+import { NextResponse } from "next/server";
 
-export default withAuth(
-  function middleware(req) {
-    // Add any additional middleware logic here
-  },
-  {
-    callbacks: {
-      authorized: ({ token, req }) => {
-        // Protect all routes under /dashboard
-        if (req.nextUrl.pathname.startsWith("/dashboard")) {
-          return !!token;
-        }
-        return true;
-      },
-    },
+export async function middleware(req) {
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET });
+
+  // Protect all routes under /dashboard
+  if (req.nextUrl.pathname.startsWith("/dashboard")) {
+    if (!token) {
+      return NextResponse.redirect(new URL("/login", req.url));
+    }
   }
-);
+
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: ["/dashboard/:path*"],

@@ -124,8 +124,28 @@ export default async function WalletTransactionsPage({ params }: { params: Promi
 
         {/* Transactions List */}
         <TransactionList
-          transactions={transactions}
-          allocations={allocations}
+          transactions={transactions.map(t => ({
+            ...t,
+            amount: Number(t.amount),
+            wallet: t.wallet ? {
+              id: t.wallet.id,
+              name: t.wallet.name,
+              type: t.wallet.type
+            } : {
+              id: '',
+              name: 'Unknown',
+              type: 'UNKNOWN'
+            }
+          }))}
+          allocations={allocations.map(a => ({
+            ...a,
+            amount: Number(a.amount),
+            budget: {
+              id: a.budget.id,
+              month: a.budget.month,
+              year: a.budget.year
+            }
+          }))}
           walletName={wallet.name}
         />
       </main>

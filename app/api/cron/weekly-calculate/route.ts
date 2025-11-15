@@ -25,7 +25,7 @@ export async function POST(request: NextRequest) {
     });
 
     for (const weeklyRecord of weeklyRecords) {
-      if (weeklyRecord.weeklyLeftover > 0) {
+      if (Number(weeklyRecord.weeklyLeftover) > 0) {
         // Transfer weekly leftover to user's savings balance
         await prisma.user.update({
           where: { id: weeklyRecord.userId },

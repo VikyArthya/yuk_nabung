@@ -157,7 +157,7 @@ export default function CreateBudgetForm({
             id="month"
             value={formData.month}
             onChange={(e) => handleInputChange("month", e.target.value)}
-            className="w-full p-2 border rounded-md"
+            className="w-full neo-select"
             required
           >
             {monthNames.map((name, index) => (
