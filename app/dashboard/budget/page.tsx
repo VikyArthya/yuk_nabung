@@ -39,10 +39,19 @@ interface Budget {
   allocations: Allocation[];
 }
 
+interface BudgetExpenses {
+  [budgetId: string]: {
+    totalSpent: number;
+    spendingProgress: number;
+    expensesCount: number;
+  };
+}
+
 export default function BudgetPage() {
   const router = useRouter();
   const [budgets, setBudgets] = useState<Budget[]>([]);
   const [currentMonthBudget, setCurrentMonthBudget] = useState<Budget | null>(null);
+  const [budgetExpenses, setBudgetExpenses] = useState<BudgetExpenses>({});
   const [loading, setLoading] = useState(true);
   const [deletingId, setDeletingId] = useState<string | null>(null);
 
@@ -54,6 +63,25 @@ export default function BudgetPage() {
   useEffect(() => {
     fetchBudgets();
   }, []);
+
+  const fetchBudgetExpenses = async (budgetId: string) => {
+    try {
+      const response = await fetch(`/api/budgets/${budgetId}/expenses`);
+      if (response.ok) {
+        const data = await response.json();
+        setBudgetExpenses(prev => ({
+          ...prev,
+          [budgetId]: {
+            totalSpent: data.totalSpent,
+            spendingProgress: data.spendingProgress,
+            expensesCount: data.expensesCount,
+          }
+        }));
+      }
+    } catch (error) {
+      console.error("Error fetching budget expenses:", error);
+    }
+  };
 
   const fetchBudgets = async () => {
     try {
@@ -71,6 +99,11 @@ export default function BudgetPage() {
           b.month === currentMonth && b.year === currentYear
         );
         setCurrentMonthBudget(current || null);
+
+        // Fetch expenses for all budgets
+        for (const budget of data) {
+          fetchBudgetExpenses(budget.id);
+        }
       }
     } catch (error) {
       console.error("Error fetching budgets:", error);
@@ -197,13 +230,10 @@ export default function BudgetPage() {
             {budgets.length > 0 ? (
               <div className="space-y-4">
                 {budgets.map((budget) => {
-                  const totalSpent = budget.weeklyBudgets.reduce(
-                    (total, week) => total + week.spentAmount,
-                    0
-                  );
-                  const spendingProgress = budget.spendingTarget > 0
-                    ? (totalSpent / budget.spendingTarget) * 100
-                    : 0;
+                  // Get spending progress from expenses data
+                  const expensesData = budgetExpenses[budget.id];
+                  const totalSpent = expensesData?.totalSpent || 0;
+                  const spendingProgress = expensesData?.spendingProgress || 0;
 
                   return (
                     <div key={budget.id} className="border border-orange-200 rounded-lg p-4 hover:bg-orange-50 transition-colors">

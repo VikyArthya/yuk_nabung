@@ -166,8 +166,64 @@ export default async function BudgetDetailPage({ params }: { params: Promise<{ i
     }
   };
 
-  // Calculate budget statistics
-  const totalSpent = budget.weeklyBudgets.reduce((sum, week) => sum + Number(week.spentAmount), 0);
+  // Helper function to get week start and end dates
+  function getWeekStart(date: Date): Date {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    const weekStart = new Date(d.setDate(diff));
+    weekStart.setHours(0, 0, 0, 0);
+    return weekStart;
+  }
+
+  function getWeekEnd(date: Date): Date {
+    const weekStart = getWeekStart(date);
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
+    return weekEnd;
+  }
+
+  // Get all expenses for this budget period
+  const allExpenses = await prisma.expense.findMany({
+    where: {
+      userId: session.user.id,
+      date: {
+        gte: budgetStartDate,
+        lte: budgetEndDate,
+      },
+    },
+  });
+
+  // Calculate expenses per week
+  const weeklyExpenses = await Promise.all(
+    budget.weeklyBudgets.map(async (week) => {
+      // Calculate week start and end based on week number
+      const firstDayOfMonth = new Date(budget.year, budget.month - 1, 1);
+      const weekStart = new Date(firstDayOfMonth);
+      weekStart.setDate(firstDayOfMonth.getDate() + (week.weekNumber - 1) * 7);
+      const weekStartDate = getWeekStart(weekStart);
+      const weekEndDate = getWeekEnd(weekStartDate);
+
+      // Get expenses for this specific week
+      const weekExpenses = allExpenses.filter(expense => {
+        const expenseDate = new Date(expense.date);
+        return expenseDate >= weekStartDate && expenseDate <= weekEndDate;
+      });
+
+      const weekSpent = weekExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
+      const weekPercentage = Number(week.plannedAmount) > 0 ? (weekSpent / Number(week.plannedAmount)) * 100 : 0;
+
+      return {
+        ...week,
+        actualSpent: weekSpent,
+        actualPercentage: weekPercentage,
+      };
+    })
+  );
+
+  // Calculate budget statistics from actual expenses
+  const totalSpent = allExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
   const totalBudget = Number(budget.weeklyBudget);
   const remainingBudget = totalBudget - totalSpent;
   const budgetUsagePercentage = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
@@ -285,20 +341,16 @@ export default async function BudgetDetailPage({ params }: { params: Promise<{ i
             </CardHeader>
             <CardContent className="pt-0">
               <div className="space-y-3">
-                {budget.weeklyBudgets.map((week) => {
-                  const weekPercentage = Number(week.plannedAmount) > 0
-                    ? (Number(week.spentAmount) / Number(week.plannedAmount)) * 100
-                    : 0;
-
+                {weeklyExpenses.map((week) => {
                   return (
                     <div key={week.id} className="border border-orange-200 rounded-lg p-4 hover:bg-orange-50 transition-colors">
                       <div className="flex justify-between items-center mb-2">
                         <h4 className="font-medium text-orange-700">Minggu {week.weekNumber}</h4>
                         <span className={`text-sm font-medium ${
-                          weekPercentage > 100 ? 'text-red-600' :
-                          weekPercentage > 80 ? 'text-orange-600' : 'text-green-600'
+                          week.actualPercentage > 100 ? 'text-red-600' :
+                          week.actualPercentage > 80 ? 'text-orange-600' : 'text-green-600'
                         }`}>
-                          {weekPercentage.toFixed(1)}%
+                          {week.actualPercentage.toFixed(1)}%
                         </span>
                       </div>
                       <div className="space-y-1 text-sm">
@@ -308,23 +360,23 @@ export default async function BudgetDetailPage({ params }: { params: Promise<{ i
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Terpakai:</span>
-                          <span className="font-medium text-red-600">Rp {Number(week.spentAmount).toLocaleString('id-ID')}</span>
+                          <span className="font-medium text-red-600">Rp {week.actualSpent.toLocaleString('id-ID')}</span>
                         </div>
                         <div className="flex justify-between">
                           <span className="text-gray-600">Sisa:</span>
-                          <span className={`font-medium ${Number(week.remainingAmount) < 0 ? 'text-red-600' : 'text-green-600'}`}>
-                            Rp {Math.abs(Number(week.remainingAmount)).toLocaleString('id-ID')}
-                            {Number(week.remainingAmount) < 0 && " (lebih)"}
+                          <span className={`font-medium ${week.actualSpent > Number(week.plannedAmount) ? 'text-red-600' : 'text-green-600'}`}>
+                            Rp {Math.abs(Number(week.plannedAmount) - week.actualSpent).toLocaleString('id-ID')}
+                            {week.actualSpent > Number(week.plannedAmount) && " (lebih)"}
                           </span>
                         </div>
                       </div>
                       <div className="mt-2 w-full bg-orange-100 rounded-full h-2">
                         <div
                           className={`h-2 rounded-full transition-all duration-300 ${
-                            weekPercentage > 100 ? 'bg-red-500' :
-                            weekPercentage > 80 ? 'bg-orange-400' : 'bg-green-500'
+                            week.actualPercentage > 100 ? 'bg-red-500' :
+                            week.actualPercentage > 80 ? 'bg-orange-400' : 'bg-green-500'
                           }`}
-                          style={{ width: `${Math.min(weekPercentage, 100)}%` }}
+                          style={{ width: `${Math.min(week.actualPercentage, 100)}%` }}
                         />
                       </div>
                     </div>
