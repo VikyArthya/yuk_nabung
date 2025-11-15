@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 import CreateBudgetForm from "@/components/budget/create-budget-form";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export default async function CreateBudgetPage() {
   const session = await getServerSession(authOptions);
@@ -15,7 +16,7 @@ export default async function CreateBudgetPage() {
     redirect("/login");
   }
 
-  const userWallets = await prisma.wallet.findMany({
+  const userWalletsRaw = await prisma.wallet.findMany({
     where: {
       userId: session.user.id,
     },
@@ -23,6 +24,12 @@ export default async function CreateBudgetPage() {
       createdAt: 'desc',
     },
   });
+
+  // Convert Decimal to number for client-side usage
+  const userWallets = userWalletsRaw.map(wallet => ({
+    ...wallet,
+    balance: Number(wallet.balance),
+  }));
 
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
