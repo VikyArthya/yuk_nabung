@@ -1,0 +1,170 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Model for NextAuth
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// Users Table - Main user accounts
+model User {
+  id           String    @id @default(cuid())
+  name         String?
+  email        String    @unique
+  password     String?   // For local authentication
+  emailVerified DateTime?
+  image        String?
+  accounts     Account[]
+  sessions     Session[]
+  budgets      Budget[]
+  wallets      Wallet[]
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+}
+
+// Budgets Table - Monthly budget configuration
+model Budget {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  month          Int      // 1-12
+  year           Int
+  salary         Decimal  // Total salary income
+  savingTarget   Decimal  @map("saving_target") // Target savings amount
+  spendingTarget Decimal  @map("spending_target") // Target spending amount
+  weeklyBudget   Decimal  @map("weekly_budget") // Weekly budget amount
+  weeklyBudgets  WeeklyBudget[]
+  allocations    Allocation[]
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, month, year])
+}
+
+// Weekly Budgets Table - Weekly budget tracking
+model WeeklyBudget {
+  id             String @id @default(cuid())
+  budgetId       String @map("budget_id")
+  budget         Budget @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  weekNumber     Int    @map("week_number") // Week number (1-4 or 5)
+  plannedAmount  Decimal @map("planned_amount") // Planned amount for this week
+  spentAmount    Decimal @default(0) @map("spent_amount") // Actual amount spent
+  remainingAmount Decimal @map("remaining_amount") // Remaining amount
+  movedToCold    Decimal @default(0) @map("moved_to_cold") // Amount moved to cold storage/savings
+  transactions   Transaction[]
+  transfers      Transfer[]
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@unique([budgetId, weekNumber])
+}
+
+// Wallets Table - User's wallets/dompet
+model Wallet {
+  id        String   @id @default(cuid())
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  name      String   // Wallet name (e.g., "Seabank", "Gopay", "Cash")
+  type      WalletType // Wallet type (bank, ewallet, cash)
+  balance   Decimal  @default(0) // Current balance
+  transactions Transaction[] @relation("WalletTransactions")
+  fromTransfers Transfer[] @relation("FromWallet")
+  toTransfers   Transfer[] @relation("ToWallet")
+  allocations   Allocation[]
+  createdAt     DateTime @default(now()) @map("created_at")
+}
+
+// Transactions Table - All financial transactions
+model Transaction {
+  id        String          @id @default(cuid())
+  weeklyId  String?         @map("weekly_id")
+  weeklyBudget WeeklyBudget? @relation(fields: [weeklyId], references: [id], onDelete: SetNull)
+  walletId  String          @map("wallet_id")
+  wallet    Wallet          @relation("WalletTransactions", fields: [walletId], references: [id], onDelete: Cascade)
+  type      TransactionType // income, expense, transfer
+  amount    Decimal         // Transaction amount
+  note      String?         // Transaction note/description
+  date      DateTime        // Transaction date
+  createdAt DateTime        @default(now()) @map("created_at")
+}
+
+// Transfers Table - Transfer between wallets
+model Transfer {
+  id          String         @id @default(cuid())
+  fromWalletId String        @map("from_wallet_id")
+  fromWallet  Wallet         @relation("FromWallet", fields: [fromWalletId], references: [id], onDelete: Cascade)
+  toWalletId  String         @map("to_wallet_id")
+  toWallet    Wallet         @relation("ToWallet", fields: [toWalletId], references: [id], onDelete: Cascade)
+  weeklyId    String?        @map("weekly_id")
+  weeklyBudget WeeklyBudget? @relation(fields: [weeklyId], references: [id], onDelete: SetNull)
+  amount      Decimal        // Transfer amount
+  createdAt   DateTime       @default(now()) @map("created_at")
+}
+
+// Allocations Table - Budget allocation to wallets
+model Allocation {
+  id        String   @id @default(cuid())
+  budgetId  String   @map("budget_id")
+  budget    Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
+  walletId  String   @map("wallet_id")
+  wallet    Wallet   @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  amount    Decimal  // Allocated amount
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([budgetId, walletId])
+}
+
+// Enums
+enum WalletType {
+  BANK    // Bank accounts (Seabank, BCA, etc.)
+  EWALLET // Digital wallets (Gopay, OVO, Dana, etc.)
+  CASH    // Physical cash
+}
+
+enum TransactionType {
+  INCOME   // Income transactions (salary, etc.)
+  EXPENSE  // Expense transactions
+  TRANSFER // Transfer between wallets
+}
