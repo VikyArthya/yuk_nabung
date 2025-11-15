@@ -61,7 +61,7 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
         body: JSON.stringify({
           amount: parseFloat(amount),
           note: note || undefined,
-          walletId: walletId || undefined,
+          walletId: walletId,
         }),
       });
 
@@ -133,7 +133,7 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
 
           <div className="space-y-2">
             <Label htmlFor="wallet" className="text-sm font-medium">
-              Dompet (opsional)
+              Dompet *
             </Label>
             {isLoadingWallets ? (
               <div className="text-sm text-gray-500 py-2">Memuat dompet...</div>
@@ -142,6 +142,7 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
                 id="wallet"
                 value={walletId}
                 onChange={(e) => setWalletId(e.target.value)}
+                required
                 className="w-full px-3 py-2 border border-orange-200 rounded-md focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
               >
                 <option value="">Pilih dompet...</option>
@@ -152,10 +153,10 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
                 ))}
               </select>
             ) : (
-              <div className="text-sm text-gray-500 py-2">
-                Belum ada dompet.
-                <a href="/dashboard/wallets/create" className="text-orange-600 hover:underline ml-1">
-                  Buat dompet terlebih dahulu
+              <div className="text-sm text-red-500 py-2 border border-red-200 rounded-md bg-red-50 px-3">
+                ⚠️ Wajib buat dompet terlebih dahulu!
+                <a href="/dashboard/wallets/create" className="text-orange-600 hover:underline ml-1 font-medium">
+                  Buat dompet sekarang
                 </a>
               </div>
             )}
@@ -189,7 +190,7 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
 
           <Button
             type="submit"
-            disabled={isLoading || !amount}
+            disabled={isLoading || !amount || !walletId || wallets.length === 0}
             className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0"
           >
             {isLoading ? "Menyimpan..." : "Catat Pengeluaran"}

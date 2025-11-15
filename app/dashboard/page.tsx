@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import { authOptions } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -9,7 +10,22 @@ import { ExpenseInputForm } from "@/components/expenses/expense-input-form";
 import { DailyExpensesList } from "@/components/expenses/daily-expenses-list";
 
 async function getDashboardData(userId: string) {
-  const { prisma } = await import("@/lib/prisma");
+  // Check if user has any budget first
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1;
+  const currentYear = currentDate.getFullYear();
+
+  const existingBudget = await prisma.budget.findFirst({
+    where: {
+      userId: userId,
+      year: currentYear,
+    },
+    select: {
+      id: true,
+      month: true,
+      weeklyBudget: true,
+    },
+  });
 
   // Get user data
   const user = await prisma.user.findUnique({
@@ -18,7 +34,6 @@ async function getDashboardData(userId: string) {
       id: true,
       name: true,
       email: true,
-      dailyBudget: true,
       savingsBalance: true
     }
   });
@@ -26,6 +41,23 @@ async function getDashboardData(userId: string) {
   if (!user) {
     return null;
   }
+
+  // If no budget exists, return user data with hasBudget: false
+  if (!existingBudget) {
+    return {
+      user: {
+        name: user.name,
+        email: user.email,
+        dailyBudget: 0,
+        savingsBalance: Number(user.savingsBalance)
+      },
+      hasBudget: false,
+      currentBudget: null
+    };
+  }
+
+  // Calculate daily budget from the most recent budget
+  const calculatedDailyBudget = Math.round(Number(existingBudget.weeklyBudget) / 7);
 
   // Get today's daily record
   const today = new Date();
@@ -46,12 +78,24 @@ async function getDashboardData(userId: string) {
       data: {
         userId: userId,
         date: today,
-        dailyBudget: user.dailyBudget,
-        dailyBudgetRemaining: user.dailyBudget,
+        dailyBudget: calculatedDailyBudget,
+        dailyBudgetRemaining: calculatedDailyBudget,
         totalExpense: 0,
         leftover: 0
       }
     });
+  } else {
+    // Update existing daily record if needed
+    if (Number(dailyRecord.dailyBudget) !== calculatedDailyBudget) {
+      dailyRecord = await prisma.dailyRecord.update({
+        where: { id: dailyRecord.id },
+        data: {
+          dailyBudget: calculatedDailyBudget,
+          dailyBudgetRemaining: calculatedDailyBudget - Number(dailyRecord.totalExpense),
+          leftover: Math.max(0, calculatedDailyBudget - Number(dailyRecord.totalExpense))
+        }
+      });
+    }
   }
 
   // Get today's expenses
@@ -72,6 +116,28 @@ async function getDashboardData(userId: string) {
   });
 
   // Get current week's record
+  function getWeekStart(date: Date): Date {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+    const weekStart = new Date(d.setDate(diff));
+    weekStart.setHours(0, 0, 0, 0);
+    return weekStart;
+  }
+
+  function getWeekEnd(date: Date): Date {
+    const weekStart = getWeekStart(date);
+    const weekEnd = new Date(weekStart);
+    weekEnd.setDate(weekStart.getDate() + 6);
+    weekEnd.setHours(23, 59, 59, 999);
+    return weekEnd;
+  }
+
+  function getDaysIntoWeek(date: Date): number {
+    const day = date.getDay();
+    return day === 0 ? 7 : day; // Sunday = 7, Monday = 1, etc.
+  }
+
   const weekStart = getWeekStart(today);
   const weekEnd = getWeekEnd(today);
 
@@ -84,31 +150,69 @@ async function getDashboardData(userId: string) {
     }
   });
 
-  // Get this week's expenses
-  const weeklyExpenses = await prisma.expense.findMany({
+  // Get this week's expenses (simple approach: get all and filter in code)
+  const allExpenses = await prisma.expense.findMany({
     where: {
-      userId: userId,
-      date: {
-        gte: weekStart,
-        lte: weekEnd
-      }
+      userId: userId
     }
   });
 
+  // Filter expenses for this week
+  const weeklyExpenses = allExpenses.filter(expense => {
+    const expenseDate = new Date(expense.date);
+    return expenseDate >= weekStart && expenseDate <= weekEnd;
+  });
+
+  
   // Calculate weekly summary
   const totalWeeklyExpenses = weeklyExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
-  const weeklyLeftover = weeklyRecord ? Number(weeklyRecord.weeklyLeftover) : 0;
-  const dailyAverage = totalWeeklyExpenses > 0 ? totalWeeklyExpenses / getDaysIntoWeek(today) : 0;
+  const daysIntoWeek = getDaysIntoWeek(today);
+  const weeklyBudgetAmount = existingBudget ? Number(existingBudget.weeklyBudget) : 0;
+  const weeklyLeftover = weeklyBudgetAmount - totalWeeklyExpenses;
+  const dailyAverage = totalWeeklyExpenses > 0 ? totalWeeklyExpenses / daysIntoWeek : 0;
+
+  // Get current month budget details for saving calculation
+  const currentBudgetDetails = await prisma.budget.findFirst({
+    where: {
+      userId: userId,
+      month: currentMonth,
+      year: currentYear,
+    },
+    select: {
+      salary: true,
+      savingTarget: true,
+      spendingTarget: true,
+      weeklyBudget: true,
+    },
+  });
+
+  // Calculate total savings balance (saving target + spending target - total expenses)
+  const totalTargetSavings = currentBudgetDetails ?
+    Number(currentBudgetDetails.savingTarget) + Number(currentBudgetDetails.spendingTarget) : 0;
+
+  const monthlyExpenses = await prisma.expense.findMany({
+    where: {
+      userId: userId,
+      date: {
+        gte: new Date(currentYear, currentMonth - 1, 1),
+        lt: new Date(currentYear, currentMonth, 1)
+      }
+    }
+  });
+  const totalMonthlyExpenses = monthlyExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
+  const actualSavings = totalTargetSavings - totalMonthlyExpenses;
 
   return {
     user: {
       name: user.name,
       email: user.email,
-      dailyBudget: Number(user.dailyBudget),
-      savingsBalance: Number(user.savingsBalance)
+      dailyBudget: calculatedDailyBudget,
+      savingsBalance: actualSavings > 0 ? actualSavings : 0
     },
+    hasBudget: true,
+    currentBudget: existingBudget,
     daily: {
-      budget: Number(user.dailyBudget),
+      budget: calculatedDailyBudget,
       remaining: Number(dailyRecord.dailyBudgetRemaining),
       spent: Number(dailyRecord.totalExpense),
       leftover: Number(dailyRecord.leftover),
@@ -117,7 +221,7 @@ async function getDashboardData(userId: string) {
         id: expense.id,
         amount: Number(expense.amount),
         note: expense.note,
-        date: expense.date.toISOString(),
+        date: expense.date,
         type: expense.type,
         wallet: expense.wallet ? {
           id: expense.wallet.id,
@@ -129,31 +233,13 @@ async function getDashboardData(userId: string) {
     weekly: {
       totalExpenses: totalWeeklyExpenses,
       dailyAverage: Math.round(dailyAverage),
-      weeklyLeftover: weeklyLeftover,
-      daysIntoWeek: getDaysIntoWeek(today),
+      weeklyLeftover: weeklyLeftover > 0 ? weeklyLeftover : 0,
+      daysIntoWeek: daysIntoWeek,
+      weekStart: weekStart,
+      weekEnd: weekEnd,
       transferredToSavings: weeklyRecord?.transferredToSavings || false
     }
   };
-}
-
-// Helper functions
-function getWeekStart(date: Date): Date {
-  const d = new Date(date);
-  const day = d.getDay();
-  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
-  return new Date(d.setDate(diff));
-}
-
-function getWeekEnd(date: Date): Date {
-  const weekStart = getWeekStart(date);
-  const weekEnd = new Date(weekStart);
-  weekEnd.setDate(weekStart.getDate() + 6);
-  return weekEnd;
-}
-
-function getDaysIntoWeek(date: Date): number {
-  const day = date.getDay();
-  return day === 0 ? 7 : day; // Sunday = 7, Monday = 1, etc.
 }
 
 export default async function DashboardPage() {
@@ -170,6 +256,125 @@ export default async function DashboardPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <p className="text-gray-500">Gagal memuat data dashboard</p>
+      </div>
+    );
+  }
+
+  // If user has no budget, show welcome screen
+  if (!dashboardData.hasBudget) {
+    return (
+      <div className="bg-gradient-to-br from-orange-50 via-yellow-50 to-white min-h-screen">
+        {/* Header */}
+        <div className="bg-white/90 backdrop-blur-sm border-b border-orange-200">
+          <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center space-x-3">
+                  <span className="text-orange-500">🍽️</span>
+                  <span>Dashboard Makan</span>
+                </h1>
+                <p className="text-gray-600 mt-1">Halo, {dashboardData.user.name}! 👋</p>
+              </div>
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                <SignOutButton />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Main Content */}
+        <main className="max-w-4xl mx-auto py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
+          <div className="text-center space-y-8">
+            {/* Welcome Card */}
+            <Card className="border-orange-100">
+              <CardHeader className="pb-6 sm:pb-8">
+                <div className="space-y-4">
+                  <div className="text-6xl">🎯</div>
+                  <div>
+                    <h2 className="text-xl sm:text-2xl font-bold text-gray-900">
+                      Selamat Datang di Nabung App!
+                    </h2>
+                    <p className="text-gray-600 mt-2">
+                      Mulai perjalanan tracking pengeluaran makan Anda hari ini
+                    </p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent className="pt-0 sm:pt-0">
+                <div className="space-y-6">
+                  {/* Info Cards */}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <Card className="bg-blue-50 border-blue-200">
+                      <CardContent className="pt-6 text-center">
+                        <div className="text-3xl mb-3">💰</div>
+                        <h3 className="font-semibold text-blue-900 mb-2">
+                          Budget Harian Dinamis
+                        </h3>
+                        <p className="text-sm text-blue-700">
+                          Daily budget akan otomatis dihitung dari weekly budget yang Anda buat
+                        </p>
+                      </CardContent>
+                    </Card>
+
+                    <Card className="bg-green-50 border-green-200">
+                      <CardContent className="pt-6 text-center">
+                        <div className="text-3xl mb-3">📊</div>
+                        <h3 className="font-semibold text-green-900 mb-2">
+                          Tracking Real-time
+                        </h3>
+                        <p className="text-sm text-green-700">
+                          Pantau pengeluaran dan sisa budget secara real-time
+                        </p>
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <Card className="bg-yellow-50 border-yellow-200">
+                    <CardContent className="pt-6 text-center">
+                      <div className="text-3xl mb-3">🚀</div>
+                      <h3 className="font-semibold text-yellow-900 mb-2">
+                        Siap Memulai!
+                      </h3>
+                      <p className="text-sm text-yellow-700">
+                        Buat budget bulanan untuk mulai tracking
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  {/* CTA Button */}
+                  <div className="space-y-4">
+                    <Link href="/dashboard/budget/create">
+                      <Button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0 text-lg py-3 px-6">
+                        📋 Buat Budget Pertama
+                      </Button>
+                    </Link>
+                    <p className="text-sm text-gray-500">
+                      Atau buat dompet terlebih di{' '}
+                      <Link href="/dashboard/wallets" className="text-orange-600 hover:underline">
+                        menu dompet
+                      </Link>
+                    </p>
+                  </div>
+
+                  {/* Tips */}
+                  <Card className="bg-gray-50 border-gray-200">
+                    <CardHeader className="pb-4">
+                      <h4 className="font-semibold text-gray-800">💡 Tips Memulai</h4>
+                    </CardHeader>
+                    <CardContent className="pt-0">
+                      <ul className="text-sm text-gray-600 space-y-2 text-left">
+                        <li>• Buat budget bulanan dengan gaji dan target pengeluaran</li>
+                        <li>• Daily budget otomatis dihitung: weekly budget ÷ 7 hari</li>
+                        <li>• Catat setiap pengeluaran makan untuk tracking</li>
+                        <li>• Lihat sisa budget dan tabungan yang terkumpul</li>
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </main>
       </div>
     );
   }
@@ -235,7 +440,7 @@ export default async function DashboardPage() {
             <CardHeader className="pb-3 sm:pb-6 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-t-lg">
               <CardTitle className="text-base sm:text-lg text-orange-700">📅 Ringkasan Mingguan</CardTitle>
               <CardDescription className="text-xs sm:text-sm text-orange-600">
-                Hari ke-{dashboardData.weekly.daysIntoWeek} minggu ini
+                {new Date(dashboardData.weekly.weekStart).toLocaleDateString('id-ID', { day: 'numeric', month: 'numeric', year: 'numeric' })} - {new Date(dashboardData.weekly.weekEnd).toLocaleDateString('id-ID', { day: 'numeric', month: 'numeric', year: 'numeric' })}
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-0 sm:pt-0">

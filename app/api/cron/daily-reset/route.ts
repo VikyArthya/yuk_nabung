@@ -72,13 +72,33 @@ export async function POST(request: NextRequest) {
         }
       }
 
+      // Get current month budget to calculate daily budget
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1;
+      const currentYear = currentDate.getFullYear();
+
+      const currentBudget = await prisma.budget.findFirst({
+        where: {
+          userId: user.id,
+          month: currentMonth,
+          year: currentYear,
+        },
+        select: {
+          weeklyBudget: true,
+        },
+      });
+
+      // Calculate daily budget from weekly budget
+      const weeklyBudgetAmount = currentBudget ? Number(currentBudget.weeklyBudget) : 0;
+      const calculatedDailyBudget = weeklyBudgetAmount > 0 ? Math.round(weeklyBudgetAmount / 7) : 0;
+
       // Create today's daily record
       await prisma.dailyRecord.create({
         data: {
           userId: user.id,
           date: today,
-          dailyBudget: user.dailyBudget,
-          dailyBudgetRemaining: user.dailyBudget,
+          dailyBudget: calculatedDailyBudget,
+          dailyBudgetRemaining: calculatedDailyBudget,
           totalExpense: 0,
           leftover: 0
         }

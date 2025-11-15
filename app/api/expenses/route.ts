@@ -57,36 +57,40 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    if (!walletId) {
+      return NextResponse.json(
+        { error: "Dompet wajib dipilih" },
+        { status: 400 }
+      );
+    }
+
     // Parse amount early for validation
     const expenseAmount = parseFloat(amount);
 
-    // Validate wallet if provided
-    let wallet = null;
-    if (walletId) {
-      wallet = await prisma.wallet.findFirst({
-        where: {
-          id: walletId,
-          userId: session.user.id,
+    // Validate wallet (required)
+    const wallet = await prisma.wallet.findFirst({
+      where: {
+        id: walletId,
+        userId: session.user.id,
+      },
+    });
+
+    if (!wallet) {
+      return NextResponse.json(
+        { error: "Dompet tidak ditemukan" },
+        { status: 404 }
+      );
+    }
+
+    // Check if wallet has sufficient balance
+    if (Number(wallet.balance) < expenseAmount) {
+      return NextResponse.json(
+        {
+          error: "Saldo dompet tidak mencukupi",
+          details: `Saldo Rp ${Number(wallet.balance).toLocaleString('id-ID')}, butuh Rp ${expenseAmount.toLocaleString('id-ID')}`
         },
-      });
-
-      if (!wallet) {
-        return NextResponse.json(
-          { error: "Dompet tidak ditemukan" },
-          { status: 404 }
-        );
-      }
-
-      // Check if wallet has sufficient balance
-      if (Number(wallet.balance) < expenseAmount) {
-        return NextResponse.json(
-          {
-            error: "Saldo dompet tidak mencukupi",
-            details: `Saldo Rp ${Number(wallet.balance).toLocaleString('id-ID')}, butuh Rp ${expenseAmount.toLocaleString('id-ID')}`
-          },
-          { status: 400 }
-        );
-      }
+        { status: 400 }
+      );
     }
 
     // Get user's current daily record
@@ -104,28 +108,66 @@ export async function POST(request: NextRequest) {
 
     // If no daily record exists for today, create one
     if (!dailyRecord) {
-      const user = await prisma.user.findUnique({
-        where: { id: session.user.id },
-        select: { dailyBudget: true }
+      // Get current month budget to calculate daily budget
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1;
+      const currentYear = currentDate.getFullYear();
+
+      const currentBudget = await prisma.budget.findFirst({
+        where: {
+          userId: session.user.id,
+          month: currentMonth,
+          year: currentYear,
+        },
+        select: {
+          weeklyBudget: true,
+        },
       });
 
-      if (!user) {
-        return NextResponse.json(
-          { error: "User tidak ditemukan" },
-          { status: 404 }
-        );
-      }
+      // Calculate daily budget from weekly budget
+      const weeklyBudgetAmount = currentBudget ? Number(currentBudget.weeklyBudget) : 0;
+      const calculatedDailyBudget = weeklyBudgetAmount > 0 ? Math.round(weeklyBudgetAmount / 7) : 0;
 
       dailyRecord = await prisma.dailyRecord.create({
         data: {
           userId: session.user.id,
           date: today,
-          dailyBudget: user.dailyBudget,
-          dailyBudgetRemaining: user.dailyBudget,
+          dailyBudget: calculatedDailyBudget,
+          dailyBudgetRemaining: calculatedDailyBudget,
           totalExpense: 0,
           leftover: 0
         }
       });
+    } else {
+      // Update existing daily record with calculated daily budget if needed
+      const currentDate = new Date();
+      const currentMonth = currentDate.getMonth() + 1;
+      const currentYear = currentDate.getFullYear();
+
+      const currentBudget = await prisma.budget.findFirst({
+        where: {
+          userId: session.user.id,
+          month: currentMonth,
+          year: currentYear,
+        },
+        select: {
+          weeklyBudget: true,
+        },
+      });
+
+      const weeklyBudgetAmount = currentBudget ? Number(currentBudget.weeklyBudget) : 0;
+      const calculatedDailyBudget = weeklyBudgetAmount > 0 ? Math.round(weeklyBudgetAmount / 7) : 0;
+
+      if (Number(dailyRecord.dailyBudget) !== calculatedDailyBudget) {
+        dailyRecord = await prisma.dailyRecord.update({
+          where: { id: dailyRecord.id },
+          data: {
+            dailyBudget: calculatedDailyBudget,
+            dailyBudgetRemaining: calculatedDailyBudget - Number(dailyRecord.totalExpense),
+            leftover: Math.max(0, calculatedDailyBudget - Number(dailyRecord.totalExpense))
+          }
+        });
+      }
     }
 
     // Check if expense exceeds remaining daily budget
@@ -138,7 +180,7 @@ export async function POST(request: NextRequest) {
     const expense = await prisma.expense.create({
       data: {
         userId: session.user.id,
-        walletId: walletId || null,
+        walletId: walletId,
         amount: expenseAmount,
         note: note || null,
         date: new Date(),
@@ -149,17 +191,15 @@ export async function POST(request: NextRequest) {
       }
     });
 
-    // Update wallet balance if wallet is selected
-    if (wallet) {
-      await prisma.wallet.update({
-        where: { id: wallet.id },
-        data: {
-          balance: {
-            decrement: expenseAmount
-          }
+    // Update wallet balance (required)
+    await prisma.wallet.update({
+      where: { id: wallet.id },
+      data: {
+        balance: {
+          decrement: expenseAmount
         }
-      });
-    }
+      }
+    });
 
     // Update daily record
     const newTotalExpense = Number(dailyRecord.totalExpense) + expenseAmount;
@@ -183,13 +223,13 @@ export async function POST(request: NextRequest) {
         leftover: newLeftover,
         isOverBudget: expenseAmount > Number(dailyRecord.dailyBudgetRemaining)
       },
-      wallet: wallet ? {
+      wallet: {
         id: wallet.id,
         name: wallet.name,
         type: wallet.type,
         previousBalance: Number(wallet.balance),
         newBalance: Number(wallet.balance) - expenseAmount
-      } : null
+      }
     });
   } catch (error) {
     console.error("Error creating expense:", error);

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
@@ -11,14 +11,13 @@ export async function GET() {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    // Get user data
+    // Get user data and current budget
     const user = await prisma.user.findUnique({
       where: { id: session.user.id },
       select: {
         id: true,
         name: true,
         email: true,
-        dailyBudget: true,
         savingsBalance: true
       }
     });
@@ -26,6 +25,26 @@ export async function GET() {
     if (!user) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
+
+    // Get current month budget to calculate daily budget
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth() + 1;
+    const currentYear = currentDate.getFullYear();
+
+    const currentBudget = await prisma.budget.findFirst({
+      where: {
+        userId: session.user.id,
+        month: currentMonth,
+        year: currentYear,
+      },
+      select: {
+        weeklyBudget: true,
+      },
+    });
+
+    // Calculate daily budget from weekly budget
+    const weeklyBudgetAmount = currentBudget ? Number(currentBudget.weeklyBudget) : 0;
+    const calculatedDailyBudget = weeklyBudgetAmount > 0 ? Math.round(weeklyBudgetAmount / 7) : 0;
 
     // Get today's daily record
     const today = new Date();
@@ -47,12 +66,24 @@ export async function GET() {
         data: {
           userId: session.user.id,
           date: today,
-          dailyBudget: user.dailyBudget,
-          dailyBudgetRemaining: user.dailyBudget,
+          dailyBudget: calculatedDailyBudget,
+          dailyBudgetRemaining: calculatedDailyBudget,
           totalExpense: 0,
           leftover: 0
         }
       });
+    } else {
+      // Update existing daily record with calculated daily budget if needed
+      if (Number(dailyRecord.dailyBudget) !== calculatedDailyBudget) {
+        todayRecord = await prisma.dailyRecord.update({
+          where: { id: dailyRecord.id },
+          data: {
+            dailyBudget: calculatedDailyBudget,
+            dailyBudgetRemaining: calculatedDailyBudget - Number(dailyRecord.totalExpense),
+            leftover: Math.max(0, calculatedDailyBudget - Number(dailyRecord.totalExpense))
+          }
+        });
+      }
     }
 
     // Get today's expenses
@@ -85,31 +116,67 @@ export async function GET() {
       }
     });
 
-    // Get this week's expenses
-    const weeklyExpenses = await prisma.expense.findMany({
+    // Get this week's expenses (simple approach: get all expenses and filter in code)
+    const allExpenses = await prisma.expense.findMany({
       where: {
-        userId: session.user.id,
-        date: {
-          gte: weekStart,
-          lte: weekEnd
-        }
+        userId: session.user.id
       }
     });
 
+    // Filter expenses for this week
+    const weeklyExpenses = allExpenses.filter(expense => {
+      const expenseDate = new Date(expense.date);
+      return expenseDate >= weekStart && expenseDate <= weekEnd;
+    });
+
+    
     // Calculate weekly summary
     const totalWeeklyExpenses = weeklyExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
-    const weeklyLeftover = weeklyRecord ? Number(weeklyRecord.weeklyLeftover) : 0;
-    const dailyAverage = totalWeeklyExpenses > 0 ? totalWeeklyExpenses / getDaysIntoWeek(today) : 0;
+    const daysIntoWeek = getDaysIntoWeek(today);
+    const weeklyBudgetAmount = currentBudget ? Number(currentBudget.weeklyBudget) : 0;
+    const weeklyLeftover = weeklyBudgetAmount - totalWeeklyExpenses;
+    const dailyAverage = totalWeeklyExpenses > 0 ? totalWeeklyExpenses / daysIntoWeek : 0;
+
+    // Get current month budget details for saving calculation
+    const currentBudgetDetails = await prisma.budget.findFirst({
+      where: {
+        userId: session.user.id,
+        month: currentMonth,
+        year: currentYear,
+      },
+      select: {
+        salary: true,
+        savingTarget: true,
+        spendingTarget: true,
+        weeklyBudget: true,
+      },
+    });
+
+    // Calculate total savings balance (saving target + spending target - total expenses)
+    const totalTargetSavings = currentBudgetDetails ?
+      Number(currentBudgetDetails.savingTarget) + Number(currentBudgetDetails.spendingTarget) : 0;
+
+    const monthlyExpenses = await prisma.expense.findMany({
+      where: {
+        userId: session.user.id,
+        date: {
+          gte: new Date(currentYear, currentMonth - 1, 1),
+          lt: new Date(currentYear, currentMonth, 1)
+        }
+      }
+    });
+    const totalMonthlyExpenses = monthlyExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
+    const actualSavings = totalTargetSavings - totalMonthlyExpenses;
 
     return NextResponse.json({
       user: {
         name: user.name,
         email: user.email,
-        dailyBudget: Number(user.dailyBudget),
-        savingsBalance: Number(user.savingsBalance)
+        dailyBudget: calculatedDailyBudget,
+        savingsBalance: actualSavings > 0 ? actualSavings : 0
       },
       daily: {
-        budget: Number(user.dailyBudget),
+        budget: calculatedDailyBudget,
         remaining: Number(todayRecord.dailyBudgetRemaining),
         spent: Number(todayRecord.totalExpense),
         leftover: Number(todayRecord.leftover),
@@ -130,8 +197,10 @@ export async function GET() {
       weekly: {
         totalExpenses: totalWeeklyExpenses,
         dailyAverage: Math.round(dailyAverage),
-        weeklyLeftover: weeklyLeftover,
-        daysIntoWeek: getDaysIntoWeek(today),
+        weeklyLeftover: weeklyLeftover > 0 ? weeklyLeftover : 0,
+        daysIntoWeek: daysIntoWeek,
+        weekStart: weekStart,
+        weekEnd: weekEnd,
         transferredToSavings: weeklyRecord?.transferredToSavings || false
       }
     });
@@ -150,6 +219,13 @@ function getWeekStart(date: Date): Date {
   const day = d.getDay();
   const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
   return new Date(d.setDate(diff));
+}
+
+function getWeekEnd(date: Date): Date {
+  const weekStart = getWeekStart(date);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 6);
+  return weekEnd;
 }
 
 function getDaysIntoWeek(date: Date): number {
