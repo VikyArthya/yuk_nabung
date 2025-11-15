@@ -1,0 +1,203 @@
+🥘 2. FITUR HARIAN
+2.1. Input Pengeluaran Makan
+
+User memasukkan:
+
+nominal (contoh: 15.000)
+
+catatan (opsional)
+
+Business Logic
+
+Simpan ke expenses dengan tipe MEAL.
+
+Kurangi dari daily_budget_remaining hari tersebut.
+
+Jika nominal < daily_budget → ada sisa.
+
+Sisa akan dikumpulkan sebagai weekly leftover.
+
+2.2. Reset Budget Harian
+
+Setiap jam 00:00, sistem melakukan:
+
+Business Logic
+
+Hitung sisa harian (jika ada): leftover = daily_budget - sum(expenses.today)
+Tambahkan leftover ke tabungan mingguan sementara: weekly_leftover += leftover
+Reset daily budget: daily_budget_remaining = daily_budget
+Buat record hari baru untuk user.
+
+📅 3. FITUR MINGGUAN
+3.1. Kalkulasi Weekly Summary
+
+Setiap hari Minggu pukul 23:59:
+
+Business Logic
+
+Hitung: total_weekly_expenses = sum(expenses this week) weekly_leftover
+Kirim leftover tersebut ke tabungan user: savings_balance += weekly_leftover
+Reset weekly leftover menjadi 0.
+Buat catatan minggu baru.
+
+3.2. Weekly & Monthly Overview
+
+User dapat melihat:
+
+Total pengeluaran minggu ini
+
+Rata-rata harian
+
+Sisa weekly budget
+
+Akumulasi tabungan dari leftover
+
+💰 4. FITUR TABUNGAN
+4.1. Akumulasi Otomatis
+
+Setiap minggu, leftover masuk ke savings_balance.
+
+Business Logic
+
+savings_balance hanya bertambah dari leftover
+
+user tidak bisa memanipulasi manual (untuk mencegah abuse)
+
+4.2. Manual Savings (opsional)
+
+Jika user ingin menambah tabungan secara manual:
+
+input nominal
+
+tipe transaksi = TOPUP_SAVINGS
+
+🏛 5. STRUKTUR DATA
+5.1. Table: users
+
+Menyimpan data utama user:
+
+id
+
+name
+
+email
+
+password (hashed)
+
+daily_budget
+
+savings_balance
+
+5.2. Table: expenses
+
+Menyimpan transaksi makan harian:
+
+id
+
+user_id
+
+amount
+
+note
+
+date
+
+type = “MEAL”
+
+5.3. Table: daily_records
+
+Menyimpan status harian user:
+
+date
+
+user_id
+
+daily_budget_remaining
+
+total_expense
+
+5.4. Table: weekly_records
+
+Mengelola rekap mingguan:
+
+week_start
+
+week_end
+
+user_id
+
+total_expenses
+
+weekly_leftover
+
+transferred_to_savings (bool)
+
+⚙ 6. PROSES OTOMATIS (CRON JOB)
+
+Jika menggunakan Vercel:
+
+gunakan cron scheduler dari Vercel Scheduler.
+
+Cron Harian — 00:00
+
+reset daily record
+
+kirim leftover harian ke kalkulasi mingguan
+
+Cron Mingguan — Minggu 23:59
+
+kirim leftover ke tabungan
+
+reset weekly leftover
+
+🎨 7. FRONTEND LOGIC (Next.js)
+Dashboard Menampilkan:
+
+Daily Budget Remaining
+
+Weekly Summary
+
+Total Savings
+
+Form Input:
+
+Amount
+
+Note
+
+Submit → hit API: /api/expenses
+
+🔐 8. AUTENTIKASI
+
+Menggunakan:
+
+NextAuth
+
+Credential provider
+
+Login → session → akses API.
+
+🚨 9. VALIDASI
+
+Tidak boleh input pengeluaran negatif
+
+Tidak boleh input tanggal mundur
+
+Tidak boleh manipulasi savings
+
+Jika makan > daily budget → tetap boleh, tapi warning “over budget”
+
+📌 10. USE CASE REAL
+
+Contoh:
+
+Budget: 20.000 / hari
+Hari itu makan: 12.000
+Sisa: 8.000
+End of week leftover = sum(sisa harian) → masuk ke savings
+
+Hasil:
+
+Pengeluaran fleksibel
+
+Sisa harian bisa dialokasikan jadi tabungan

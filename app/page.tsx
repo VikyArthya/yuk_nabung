@@ -13,50 +13,31 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      {/* Header */}
-      <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <h1 className="text-2xl font-bold text-gray-900">
-              💰 Aplikasi Menabung
-            </h1>
-            <div className="space-x-4">
-              <Link href="/login">
-                <Button variant="outline">Masuk</Button>
-              </Link>
-              <Link href="/register">
-                <Button>Daftar</Button>
-              </Link>
-            </div>
-          </div>
-        </div>
-      </header>
-
+    <div className="min-h-screen flex flex-col -mt-16 lg:-mt-20">
       {/* Hero Section */}
-      <main className="flex-grow">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <main className="flex-grow pt-16 lg:pt-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
           <div className="text-center">
-            <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-              Kelola Keuangan Pribadi
-              <span className="block text-primary"> dengan Mudah</span>
+            <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl md:text-6xl lg:text-7xl leading-tight">
+              <span className="text-orange-500">💰</span> Nabung<span className="text-orange-500">ku</span>
+              <div className="block text-gray-800 mt-2">Solusi Keuangan Pribadi</div>
             </h1>
-            <p className="mt-3 max-w-md mx-auto text-base text-gray-500 sm:text-lg md:mt-5 md:text-xl md:max-w-3xl">
-              Aplikasi manajemen keuangan untuk mengatur gaji, target nabung,
-              dan tracking pengeluaran harian Anda. Pantau alokasi dana ke berbagai dompet.
+            <p className="mt-6 max-w-3xl mx-auto text-base text-gray-600 sm:text-lg md:text-xl md:mt-8 leading-relaxed">
+              Aplikasi digital untuk membantu Anda mengatur keuangan pribadi,
+              menabung dengan disiplin, dan mencapai target finansial dengan mudah dan transparan.
             </p>
-            <div className="mt-5 max-w-md mx-auto sm:flex sm:justify-center md:mt-8">
-              <div className="rounded-md shadow">
+            <div className="mt-8 flex flex-col sm:flex-row sm:justify-center sm:mt-10 space-y-4 sm:space-y-0 sm:space-x-6 max-w-lg mx-auto">
+              <div className="rounded-xl shadow-lg overflow-hidden">
                 <Link href="/register">
-                  <Button className="w-full">
-                    Mulai Gratis
+                  <Button className="w-full text-base sm:text-lg py-4 px-8 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold border-0 shadow-md hover:shadow-lg transition-all duration-200">
+                    🚀 Mulai Sekarang
                   </Button>
                 </Link>
               </div>
-              <div className="mt-3 rounded-md shadow sm:mt-0 sm:ml-3">
+              <div className="rounded-xl shadow-lg overflow-hidden">
                 <Link href="/login">
-                  <Button variant="outline" className="w-full">
-                    Masuk ke Akun
+                  <Button variant="outline" className="w-full text-base sm:text-lg py-4 px-8 border-2 border-orange-500 text-orange-500 hover:bg-orange-50 font-semibold transition-all duration-200">
+                    🔑 Masuk ke Akun
                   </Button>
                 </Link>
               </div>
@@ -64,112 +45,119 @@ export default async function Home() {
           </div>
 
           {/* Features */}
-          <div className="mt-20">
+          <div className="mt-20 sm:mt-24">
             <div className="text-center">
-              <h2 className="text-3xl font-extrabold text-gray-900">
-                Fitur Utama
+              <h2 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-4">
+                💎 <span className="text-orange-500">Fitur</span> Unggulan
               </h2>
-              <p className="mt-4 max-w-2xl mx-auto text-xl text-gray-500">
-                Semua yang Anda butuhkan untuk mengelola keuangan pribadi
+              <p className="mt-3 max-w-3xl mx-auto text-base sm:text-lg text-gray-600 leading-relaxed">
+                Platform lengkap untuk membantu Anda mencapai tujuan keuangan dengan mudah dan efektif
               </p>
             </div>
 
             <div className="mt-12">
-              <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
-                <div className="pt-6">
-                  <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow">
-                    <div className="-mt-6">
-                      <div>
-                        <span className="inline-flex items-center justify-center p-3 bg-blue-500 rounded-md shadow-lg">
-                          <span className="text-2xl">📊</span>
-                        </span>
-                      </div>
-                      <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">
-                        Budget Bulanan
-                      </h3>
-                      <p className="mt-5 text-base text-gray-500">
-                        Atur gaji bulanan, target nabung, dan batas pengeluaran dengan mudah.
-                      </p>
-                    </div>
+              <div className="grid grid-cols-1 gap-6 sm:gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-orange-100">
+                  <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-xl mb-4">
+                    <span className="text-3xl">📊</span>
                   </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
+                    Perencanaan Budget
+                  </h3>
+                  <p className="text-gray-600 text-center leading-relaxed">
+                    Buat anggaran bulanan, target menabung, dan alokasi dana dengan interface yang intuitif dan real-time tracking.
+                  </p>
                 </div>
 
-                <div className="pt-6">
-                  <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow">
-                    <div className="-mt-6">
-                      <div>
-                        <span className="inline-flex items-center justify-center p-3 bg-green-500 rounded-md shadow-lg">
-                          <span className="text-2xl">💳</span>
-                        </span>
-                      </div>
-                      <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">
-                        Multi-Dompet
-                      </h3>
-                      <p className="mt-5 text-base text-gray-500">
-                        Kelola Seabank, Gopay, dan dompet lainnya dalam satu aplikasi.
-                      </p>
-                    </div>
+                <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-orange-100">
+                  <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-xl mb-4">
+                    <span className="text-3xl">💳</span>
                   </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
+                    Multi-Dompet
+                  </h3>
+                  <p className="text-gray-600 text-center leading-relaxed">
+                    Kelola berbagai jenis dompet digital dalam satu platform dengan integrasi seamless dan notifikasi otomatis.
+                  </p>
                 </div>
 
-                <div className="pt-6">
-                  <div className="flow-root bg-white rounded-lg px-6 pb-8 shadow">
-                    <div className="-mt-6">
-                      <div>
-                        <span className="inline-flex items-center justify-center p-3 bg-purple-500 rounded-md shadow-lg">
-                          <span className="text-2xl">📈</span>
-                        </span>
-                      </div>
-                      <h3 className="mt-8 text-lg font-medium text-gray-900 tracking-tight">
-                        Tracking Real-time
-                      </h3>
-                      <p className="mt-5 text-base text-gray-500">
-                        Pantau pengeluaran harian dan mingguan untuk tetap on budget.
-                      </p>
-                    </div>
+                <div className="bg-white rounded-2xl p-6 sm:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border border-orange-100">
+                  <div className="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-orange-100 to-yellow-100 rounded-xl mb-4">
+                    <span className="text-3xl">📈</span>
                   </div>
+                  <h3 className="text-xl font-bold text-gray-900 mb-3 text-center">
+                    Analisis Laporan
+                  </h3>
+                  <p className="text-gray-600 text-center leading-relaxed">
+                    Dashboard analitik komprehensif untuk pantau performa keuangan dan progress tujuan finansial Anda.
+                  </p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Example Budget Display */}
-          <div className="mt-20 bg-gray-50 rounded-lg p-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6 text-center">
-              Contoh Konfigurasi Budget
+          <div className="mt-20 sm:mt-24 bg-gradient-to-br from-orange-50 to-yellow-50 rounded-2xl p-6 sm:p-8 border border-orange-200">
+            <h3 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">
+              💰 <span className="text-orange-500">Simulasi</span> Budget Bulanan
             </h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-3">📋 Anggaran Bulanan</h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Gaji:</span>
-                    <span className="font-medium">Rp 3.500.000</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
+              <div className="bg-white rounded-xl p-6 border border-orange-200 shadow-md">
+                <h4 className="font-semibold text-gray-900 mb-4 text-lg flex items-center">
+                  <span className="mr-2">📋</span> Rencana Anggaran
+                </h4>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center py-3 border-b border-gray-200">
+                    <span className="text-gray-700 font-medium">Pendapatan Bulanan:</span>
+                    <span className="font-bold text-gray-900 text-lg">Rp 5.000.000</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Target Nabung:</span>
-                    <span className="font-medium text-green-600">Rp 2.000.000</span>
+                  <div className="flex justify-between items-center py-3 border-b border-gray-200">
+                    <span className="text-gray-700 font-medium">Target Menabung:</span>
+                    <span className="font-bold text-green-600 text-lg">Rp 3.000.000</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Target Pengeluaran:</span>
-                    <span className="font-medium text-red-600">Rp 1.500.000</span>
+                  <div className="flex justify-between items-center py-3">
+                    <span className="text-gray-700 font-medium">Budget Harian:</span>
+                    <span className="font-bold text-orange-600 text-lg">Rp 2.000.000</span>
+                  </div>
+                  <div className="mt-4 p-3 bg-orange-50 rounded-lg">
+                    <div className="flex justify-between text-sm font-medium text-orange-800">
+                      <span>Pencapaian Target:</span>
+                      <span>60% 💪</span>
+                    </div>
                   </div>
                 </div>
               </div>
-              <div>
-                <h4 className="font-semibold text-gray-900 mb-3">💰 Alokasi Dompet</h4>
-                <div className="space-y-2">
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Seabank:</span>
-                    <span className="font-medium">Rp 1.440.000</span>
+              <div className="bg-white rounded-xl p-6 border border-orange-200 shadow-md">
+                <h4 className="font-semibold text-gray-900 mb-4 text-lg flex items-center">
+                  <span className="mr-2">💰</span> Alokasi Dana
+                </h4>
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-orange-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                        SB
+                      </div>
+                      <span className="text-gray-700 font-medium">Seabank</span>
+                    </div>
+                    <span className="font-bold text-gray-900 text-lg">Rp 1.200.000</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Gopay:</span>
-                    <span className="font-medium">Rp 60.000</span>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-10 h-10 bg-gradient-to-br from-green-400 to-green-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                        GP
+                      </div>
+                      <span className="text-gray-700 font-medium">Gopay</span>
+                    </div>
+                    <span className="font-bold text-gray-900 text-lg">Rp 300.000</span>
                   </div>
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Harian (20rb x 28hr):</span>
-                    <span className="font-medium">Rp 560.000</span>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100">
+                    <div className="flex items-center space-x-2">
+                      <div className="w-10 h-10 bg-gradient-to-br from-blue-400 to-blue-500 rounded-lg flex items-center justify-center text-white font-bold text-sm">
+                        CS
+                      </div>
+                      <span className="text-gray-700 font-medium">Cash</span>
+                    </div>
+                    <span className="font-bold text-gray-900 text-lg">Rp 500.000</span>
                   </div>
                 </div>
               </div>
@@ -177,15 +165,6 @@ export default async function Home() {
           </div>
         </div>
       </main>
-
-      {/* Footer */}
-      <footer className="bg-white border-t border-gray-200">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <p className="text-center text-base text-gray-500">
-            © 2024 Aplikasi Menabung. Kelola keuangan pribadi dengan lebih baik.
-          </p>
-        </div>
-      </footer>
     </div>
   );
 }

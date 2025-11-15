@@ -52,18 +52,24 @@ model VerificationToken {
 
 // Users Table - Main user accounts
 model User {
-  id           String    @id @default(cuid())
-  name         String?
-  email        String    @unique
-  password     String?   // For local authentication
-  emailVerified DateTime?
-  image        String?
-  accounts     Account[]
-  sessions     Session[]
-  budgets      Budget[]
-  wallets      Wallet[]
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
+  id               String    @id @default(cuid())
+  name             String?
+  email            String    @unique
+  password         String?   // For local authentication
+  emailVerified    DateTime?
+  image            String?
+  dailyBudget      Decimal   @default(20000) @map("daily_budget") // Daily meal budget (default: 20k)
+  savingsBalance   Decimal   @default(0) @map("savings_balance") // Automatic savings from leftovers
+  manualSavings    Decimal   @default(0) @map("manual_savings") // Manual savings topups
+  accounts         Account[]
+  sessions         Session[]
+  budgets          Budget[]
+  wallets          Wallet[]
+  expenses         Expense[]
+  dailyRecords     DailyRecord[]
+  weeklyRecords    WeeklyRecord[]
+  createdAt        DateTime  @default(now()) @map("created_at")
+  updatedAt        DateTime  @updatedAt @map("updated_at")
 }
 
 // Budgets Table - Monthly budget configuration
@@ -110,6 +116,7 @@ model Wallet {
   type      WalletType // Wallet type (bank, ewallet, cash)
   balance   Decimal  @default(0) // Current balance
   transactions Transaction[] @relation("WalletTransactions")
+  expenses  Expense[] // Expenses made from this wallet
   fromTransfers Transfer[] @relation("FromWallet")
   toTransfers   Transfer[] @relation("ToWallet")
   allocations   Allocation[]
@@ -156,6 +163,52 @@ model Allocation {
   @@unique([budgetId, walletId])
 }
 
+// Expenses Table - Daily meal expenses tracking
+model Expense {
+  id      String   @id @default(cuid())
+  userId  String   @map("user_id")
+  user    User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  walletId String? @map("wallet_id") // Wallet where expense was made
+  wallet  Wallet?  @relation(fields: [walletId], references: [id], onDelete: SetNull)
+  amount  Decimal  // Expense amount
+  note    String?  // Optional note
+  date    DateTime @default(now()) // Date of expense
+  type    ExpenseType @default(MEAL) // Type of expense (always MEAL for meal tracking)
+  createdAt DateTime @default(now()) @map("created_at")
+}
+
+// Daily Records Table - Daily budget tracking
+model DailyRecord {
+  id                   String   @id @default(cuid())
+  userId               String   @map("user_id")
+  user                 User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  date                 DateTime @map("date") // Date (no time, just date)
+  dailyBudget          Decimal  @map("daily_budget") // Daily budget amount
+  dailyBudgetRemaining Decimal  @map("daily_budget_remaining") // Remaining daily budget
+  totalExpense         Decimal  @default(0) @map("total_expense") // Total expenses for the day
+  leftover             Decimal  @default(0) // Leftover for the day (if any)
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, date])
+}
+
+// Weekly Records Table - Weekly summary and leftover tracking
+model WeeklyRecord {
+  id                     String   @id @default(cuid())
+  userId                 String   @map("user_id")
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  weekStart              DateTime @map("week_start") // Start of week (Monday)
+  weekEnd                DateTime @map("week_end") // End of week (Sunday)
+  totalExpenses          Decimal  @default(0) @map("total_expenses") // Total expenses this week
+  weeklyLeftover         Decimal  @default(0) @map("weekly_leftover") // Accumulated weekly leftover
+  transferredToSavings   Boolean  @default(false) @map("transferred_to_savings") // Whether leftover is transferred to savings
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, weekStart])
+}
+
 // Enums
 enum WalletType {
   BANK    // Bank accounts (Seabank, BCA, etc.)
@@ -167,4 +220,9 @@ enum TransactionType {
   INCOME   // Income transactions (salary, etc.)
   EXPENSE  // Expense transactions
   TRANSFER // Transfer between wallets
+}
+
+enum ExpenseType {
+  MEAL          // Daily meal expenses
+  TOPUP_SAVINGS // Manual savings topup
 }
