@@ -488,7 +488,7 @@ export default async function DashboardPage() {
                               </div>
                               <div className="text-right">
                                 <p className="font-black text-sm">
-                                  Rp {wallet.balance.toLocaleString('id-ID')}
+                                  Rp {Number(wallet.balance).toLocaleString('id-ID')}
                                 </p>
                               </div>
                             </div>
