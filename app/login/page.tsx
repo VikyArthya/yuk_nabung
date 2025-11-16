@@ -46,7 +46,7 @@ export default function LoginPage() {
         <div>
           <h2 className="mt-6 text-center neo-heading text-3xl flex items-center justify-center space-x-3">
             <span>🍽️</span>
-            <span>Masuk ke Nabung App</span>
+            <span>Masuk ke YukNabung App</span>
           </h2>
           <p className="mt-2 text-center neo-text text-sm">
             Atau{" "}

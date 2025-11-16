@@ -65,11 +65,11 @@ export default function NavbarSuperbank() {
             </div>
             <div>
               <span className="text-xl font-black text-gray-900 hidden sm:block">
-                <span className="text-orange-600">Nabung</span>
-                <span className="text-gray-900">ku</span>
+                <span className="text-orange-600">Yuk</span>
+                <span className="text-gray-900">Nabung</span>
               </span>
               <span className="text-lg font-black text-gray-900 sm:hidden">
-                <span className="text-orange-600">N</span>abungku
+                <span className="text-orange-600">Y</span>ukNabung
               </span>
             </div>
           </Link>

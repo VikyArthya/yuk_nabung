@@ -102,8 +102,8 @@ export default function FooterSuperbank() {
               </div>
               <div>
                 <span className="text-3xl font-black text-gray-900">
-                  <span className="text-red-600">Nabung</span>
-                  <span className="text-gray-900">ku</span>
+                  <span className="text-red-600">Yuk</span>
+                  <span className="text-gray-900">Nabung</span>
                 </span>
                 <p className="text-sm font-bold text-gray-800">Aplikasi Keuangan Pribadi</p>
               </div>
@@ -118,8 +118,8 @@ export default function FooterSuperbank() {
                 <div className="w-8 h-8 bg-orange-100 border-2 border-black flex items-center justify-center">
                   <Mail className="w-4 h-4 text-orange-600" />
                 </div>
-                <a href="mailto:info@nabungku.id" className="font-black hover:text-orange-600 transition-colors">
-                  info@nabungku.id
+                <a href="mailto:info@yuknabung.id" className="font-black hover:text-orange-600 transition-colors">
+                  info@yuknabung.id
                 </a>
               </div>
               <div className="flex items-center space-x-4 text-gray-700">
@@ -238,7 +238,7 @@ export default function FooterSuperbank() {
           <div className="bg-orange-100 border-2 border-black shadow-[4px_4px_0px_black] p-6 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
             <div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
               <div className="flex items-center space-x-2 text-gray-800 text-sm font-black">
-                <span>© {currentYear} Nabungku.</span>
+                <span>© {currentYear} YukNabung.</span>
                 <span>All rights reserved.</span>
               </div>
               <div className="flex items-center space-x-2 text-gray-800 text-sm font-black">

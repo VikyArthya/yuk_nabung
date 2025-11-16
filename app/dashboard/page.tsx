@@ -9,6 +9,24 @@ import { SignOutButton } from "@/components/auth/sign-out-button";
 import { ExpenseInputForm } from "@/components/expenses/expense-input-form";
 import { DailyExpensesList } from "@/components/expenses/daily-expenses-list";
 
+// Helper functions untuk week calculation (sama seperti di budget detail)
+function getWeekStart(date: Date): Date {
+  const d = new Date(date);
+  const day = d.getDay();
+  const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+  const weekStart = new Date(d.setDate(diff));
+  weekStart.setHours(0, 0, 0, 0);
+  return weekStart;
+}
+
+function getWeekEnd(date: Date): Date {
+  const weekStart = getWeekStart(date);
+  const weekEnd = new Date(weekStart);
+  weekEnd.setDate(weekStart.getDate() + 6);
+  weekEnd.setHours(23, 59, 59, 999);
+  return weekEnd;
+}
+
 async function getDashboardData(userId: string) {
   // Check if user has any budget first
   const currentDate = new Date();
@@ -115,31 +133,31 @@ async function getDashboardData(userId: string) {
     }
   });
 
-  // Get current week's record
-  function getWeekStart(date: Date): Date {
-    const d = new Date(date);
-    const day = d.getDay();
-    const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
-    const weekStart = new Date(d.setDate(diff));
-    weekStart.setHours(0, 0, 0, 0);
-    return weekStart;
-  }
-
-  function getWeekEnd(date: Date): Date {
-    const weekStart = getWeekStart(date);
-    const weekEnd = new Date(weekStart);
-    weekEnd.setDate(weekStart.getDate() + 6);
-    weekEnd.setHours(23, 59, 59, 999);
-    return weekEnd;
-  }
-
-  function getDaysIntoWeek(date: Date): number {
-    const day = date.getDay();
-    return day === 0 ? 7 : day; // Sunday = 7, Monday = 1, etc.
-  }
+  // Get current week's record (using same approach as budget detail page)
 
   const weekStart = getWeekStart(today);
   const weekEnd = getWeekEnd(today);
+
+  // Get all expenses for current user (same approach as budget detail)
+  const allExpenses = await prisma.expense.findMany({
+    where: {
+      userId: userId
+    }
+  });
+
+  // Filter expenses for this week (exact same logic as budget detail page)
+  const weeklyExpenses = allExpenses.filter(expense => {
+    const expenseDate = new Date(expense.date);
+    return expenseDate >= weekStart && expenseDate <= weekEnd;
+  });
+
+  
+  // Calculate weekly summary (same approach as budget detail page)
+  const totalWeeklyExpenses = weeklyExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
+  const weeklyBudgetAmount = existingBudget ? Number(existingBudget.weeklyBudget) : 0;
+  const weeklyLeftover = weeklyBudgetAmount - totalWeeklyExpenses;
+  const daysIntoWeek = today.getDay() === 0 ? 7 : today.getDay(); // Sunday = 7, Monday = 1, etc.
+  const dailyAverage = totalWeeklyExpenses > 0 ? Math.round(totalWeeklyExpenses / daysIntoWeek) : 0;
 
   const weeklyRecord = await prisma.weeklyRecord.findUnique({
     where: {
@@ -150,27 +168,7 @@ async function getDashboardData(userId: string) {
     }
   });
 
-  // Get this week's expenses (simple approach: get all and filter in code)
-  const allExpenses = await prisma.expense.findMany({
-    where: {
-      userId: userId
-    }
-  });
-
-  // Filter expenses for this week
-  const weeklyExpenses = allExpenses.filter(expense => {
-    const expenseDate = new Date(expense.date);
-    return expenseDate >= weekStart && expenseDate <= weekEnd;
-  });
-
   
-  // Calculate weekly summary
-  const totalWeeklyExpenses = weeklyExpenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
-  const daysIntoWeek = getDaysIntoWeek(today);
-  const weeklyBudgetAmount = existingBudget ? Number(existingBudget.weeklyBudget) : 0;
-  const weeklyLeftover = weeklyBudgetAmount - totalWeeklyExpenses;
-  const dailyAverage = totalWeeklyExpenses > 0 ? totalWeeklyExpenses / daysIntoWeek : 0;
-
   // Get current month budget details for saving calculation
   const currentBudgetDetails = await prisma.budget.findFirst({
     where: {
@@ -237,7 +235,8 @@ async function getDashboardData(userId: string) {
       daysIntoWeek: daysIntoWeek,
       weekStart: weekStart,
       weekEnd: weekEnd,
-      transferredToSavings: weeklyRecord?.transferredToSavings || false
+      transferredToSavings: weeklyRecord?.transferredToSavings || false,
+      weeklyBudget: weeklyBudgetAmount
     }
   };
 }
@@ -252,6 +251,7 @@ export default async function DashboardPage() {
   // Get dashboard data
   const dashboardData = await getDashboardData(session.user.id);
 
+  
   if (!dashboardData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -292,7 +292,7 @@ export default async function DashboardPage() {
                   <div className="text-6xl">🎯</div>
                   <div>
                     <h2 className="neo-heading text-xl sm:text-2xl">
-                      Selamat Datang di Nabung App!
+                      Selamat Datang di YukNabung!
                     </h2>
                     <p className="neo-text mt-2">
                       Mulai perjalanan tracking pengeluaran makan Anda hari ini
@@ -432,33 +432,46 @@ export default async function DashboardPage() {
           {/* Weekly Summary Card */}
           <Card className="md:col-span-1 neo-card-raised">
             <CardHeader className="pb-3 sm:pb-6 neo-blue">
-              <CardTitle className="text-base sm:text-lg neo-heading text-white">📅 Ringkasan Mingguan</CardTitle>
+              <CardTitle className="text-base sm:text-lg neo-heading text-white">📅 Info Mingguan</CardTitle>
               <CardDescription className="text-xs sm:text-sm neo-text text-white">
                 {dashboardData.weekly ?
                   `${new Date(dashboardData.weekly.weekStart).toLocaleDateString('id-ID', { day: 'numeric', month: 'numeric', year: 'numeric' })} - ${new Date(dashboardData.weekly.weekEnd).toLocaleDateString('id-ID', { day: 'numeric', month: 'numeric', year: 'numeric' })}`
                   : "Data mingguan tidak tersedia"}
               </CardDescription>
-            </CardHeader>
+              </CardHeader>
             <CardContent className="pt-0 sm:pt-0">
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm font-bold text-white">Total Pengeluaran:</span>
-                  <span className="font-black text-xs sm:text-sm text-white">
+                  <span className="text-xs sm:text-sm font-bold text-gray-900">Total Pengeluaran:</span>
+                  <span className="font-black text-xs sm:text-sm text-gray-900">
                     Rp {(dashboardData.weekly?.totalExpenses || 0).toLocaleString('id-ID')}
                   </span>
                 </div>
+                {(dashboardData.weekly?.weeklyBudget && dashboardData.weekly.weeklyBudget > 0) && (
+                  <div className="flex justify-between items-center">
+                    <span className="text-xs sm:text-sm font-bold text-gray-900">Budget Mingguan:</span>
+                    <span className="font-black text-xs sm:text-sm text-gray-900">
+                      Rp {(dashboardData.weekly?.weeklyBudget || 0).toLocaleString('id-ID')}
+                    </span>
+                  </div>
+                )}
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm font-bold text-white">Rata-rata/hari:</span>
-                  <span className="font-black text-xs sm:text-sm text-white">
+                  <span className="text-xs sm:text-sm font-bold text-gray-900">Rata-rata/hari:</span>
+                  <span className="font-black text-xs sm:text-sm text-gray-900">
                     Rp {(dashboardData.weekly?.dailyAverage || 0).toLocaleString('id-ID')}
                   </span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-xs sm:text-sm font-bold text-white">Sisa Mingguan:</span>
-                  <span className="font-black text-xs sm:text-sm text-white">
+                  <span className="text-xs sm:text-sm font-bold text-gray-900">Sisa Mingguan:</span>
+                  <span className="font-black text-xs sm:text-sm text-gray-900">
                     Rp {(dashboardData.weekly?.weeklyLeftover || 0).toLocaleString('id-ID')}
                   </span>
                 </div>
+                {(dashboardData.weekly?.totalExpenses || 0) === 0 && (
+                  <div className="text-xs text-gray-900 mt-2 text-center">
+                    Belum ada pengeluaran minggu ini
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

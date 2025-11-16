@@ -16,10 +16,10 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Nabung - Aplikasi Manajemen Keuangan Pribadi",
+  title: "YukNabung - Aplikasi Manajemen Keuangan Pribadi",
   description: "Aplikasi manajemen keuangan pribadi untuk mengatur gaji, target nabung, dan tracking pengeluaran dengan mudah dan efisien",
   keywords: ["manajemen keuangan", "budgeting", "menabung", "tracking pengeluaran", "dompet digital"],
-  authors: [{ name: "Nabung Team" }],
+  authors: [{ name: "YukNabung Team" }],
   viewport: "width=device-width, initial-scale=1",
 };
 

@@ -21,7 +21,7 @@ export default async function Home() {
             <div className="text-center">
               <div className="bg-white border-4 border-black shadow-[12px_12px_0px_black] p-12 inline-block neo-interactive hover:shadow-[14px_14px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
                 <h1 className="neo-heading text-4xl sm:text-5xl md:text-6xl lg:text-7xl">
-                  <span className="text-black">💰</span> Nabung<span className="text-black">ku</span>
+                  <span className="text-black">💰</span> YukNabung
                   <div className="neo-subheading mt-4">Solusi Keuangan Pribadi</div>
                 </h1>
                 <p className="mt-8 max-w-3xl mx-auto neo-text text-base sm:text-lg md:text-xl leading-relaxed">
