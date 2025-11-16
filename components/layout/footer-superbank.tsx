@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, Heart, Shield, Award, Zap, Users } from "lucide-react";
+import { Github, Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin, Heart, Shield, Award, Zap, Users } from "lucide-react";
 
 export default function FooterSuperbank() {
   const currentYear = new Date().getFullYear();
@@ -26,10 +26,10 @@ export default function FooterSuperbank() {
   };
 
   const socialLinks = [
-    { icon: Facebook, href: "#", label: "Facebook" },
-    { icon: Instagram, href: "#", label: "Instagram" },
+    { icon: Github, href: "https://github.com/VikyArthya", label: "Github" },
+    { icon: Instagram, href: "https://www.instagram.com/vikyarthyaa/", label: "Instagram" },
     { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
+    { icon: Linkedin, href: "www.linkedin.com/in/vikyarthyasaputra", label: "LinkedIn" },
   ];
 
   const features = [
@@ -42,7 +42,7 @@ export default function FooterSuperbank() {
   return (
     <footer className="neo-yellow">
       {/* Newsletter Section */}
-      <div className="neo-border-b-4 border-black">
+      {/* <div className="neo-border-b-4 border-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
           <div className="max-w-4xl mx-auto text-center">
             <div className="bg-blue-100 border-4 border-black shadow-[8px_8px_0px_black] p-8 inline-block neo-interactive hover:shadow-[10px_10px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
@@ -65,7 +65,7 @@ export default function FooterSuperbank() {
             </div>
           </div>
         </div>
-      </div>
+      </div> */}
 
       {/* Features Section */}
       <div className="neo-border-b-4 border-black">
@@ -118,16 +118,16 @@ export default function FooterSuperbank() {
                 <div className="w-8 h-8 bg-orange-100 border-2 border-black flex items-center justify-center">
                   <Mail className="w-4 h-4 text-orange-600" />
                 </div>
-                <a href="mailto:info@yuknabung.id" className="font-black hover:text-orange-600 transition-colors">
-                  info@yuknabung.id
+                <a href="mailto:vikyarthya1945@gmail.com" className="font-black hover:text-orange-600 transition-colors">
+                  vikyarthya1945@gmail.com
                 </a>
               </div>
               <div className="flex items-center space-x-4 text-gray-700">
                 <div className="w-8 h-8 bg-orange-100 border-2 border-black flex items-center justify-center">
                   <Phone className="w-4 h-4 text-orange-600" />
                 </div>
-                <a href="tel:+62215008888" className="font-black hover:text-orange-600 transition-colors">
-                  0808 1500 888
+                <a href="tel:+6287735397457" className="font-black hover:text-orange-600 transition-colors">
+                  0877 3539 7457
                 </a>
               </div>
               <div className="flex items-center space-x-4 text-gray-700">
@@ -135,7 +135,7 @@ export default function FooterSuperbank() {
                   <MapPin className="w-4 h-4 text-orange-600" />
                 </div>
                 <span className="font-black hover:text-orange-600 transition-colors">
-                  Jakarta, Indonesia
+                  Semarang, Indonesia
                 </span>
               </div>
             </div>
@@ -172,22 +172,6 @@ export default function FooterSuperbank() {
             </ul>
           </div>
 
-          <div className="bg-purple-100 border-2 border-black shadow-[4px_4px_0px_black] p-6 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
-            <h3 className="font-black text-lg mb-6 text-gray-900">Perusahaan</h3>
-            <ul className="space-y-3">
-              {footerLinks.company.map((link) => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-gray-800 hover:text-purple-600 transition-colors duration-200 font-bold block py-1"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
           <div className="bg-pink-100 border-2 border-black shadow-[4px_4px_0px_black] p-6 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
             <h3 className="font-black text-lg mb-6 text-gray-900">Layanan</h3>
             <ul className="space-y-3">
@@ -202,32 +186,6 @@ export default function FooterSuperbank() {
                 </li>
               ))}
             </ul>
-          </div>
-        </div>
-
-        {/* App Download Section */}
-        <div className="neo-border-t-4 border-black mt-12 pt-12">
-          <div className="text-center">
-            <div className="bg-yellow-100 border-4 border-black shadow-[8px_8px_0px_black] p-8 inline-block mb-6 neo-interactive hover:shadow-[10px_10px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
-              <h3 className="text-xl font-black text-gray-900 mb-4">Download Aplikasi Mobile</h3>
-              <p className="text-gray-800 mb-6 font-bold">Kelola keuangan Anda dimana saja, kapan saja</p>
-            </div>
-            <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
-              <button className="bg-black border-2 border-black shadow-[4px_4px_0px_black] hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px] text-white px-8 py-4 rounded-lg flex items-center space-x-3 transition-all duration-200 neo-interactive">
-                <div className="w-6 h-6">📱</div>
-                <div className="text-left">
-                  <div className="text-xs font-bold">Download on the</div>
-                  <div className="text-sm font-black">App Store</div>
-                </div>
-              </button>
-              <button className="bg-black border-2 border-black shadow-[4px_4px_0px_black] hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px] text-white px-8 py-4 rounded-lg flex items-center space-x-3 transition-all duration-200 neo-interactive">
-                <div className="w-6 h-6">🤖</div>
-                <div className="text-left">
-                  <div className="text-xs font-bold">Get it on</div>
-                  <div className="text-sm font-black">Google Play</div>
-                </div>
-              </button>
-            </div>
           </div>
         </div>
       </div>
@@ -246,7 +204,7 @@ export default function FooterSuperbank() {
                 <div className="w-6 h-6 bg-red-200 border-2 border-black shadow-[2px_2px_0px_black] flex items-center justify-center">
                   <Heart className="w-4 h-4 text-red-600 fill-current" />
                 </div>
-                <span>in Indonesia 💙</span>
+                <span>by Viky Arthya</span>
               </div>
             </div>
           </div>

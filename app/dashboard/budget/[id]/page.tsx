@@ -275,7 +275,7 @@ export default async function BudgetDetailPage({ params }: { params: Promise<{ i
 
           <Card className="neo-card-raised">
             <CardHeader className="pb-3 sm:pb-6 neo-red border-b-4 border-black">
-              <CardTitle className="text-sm neo-heading text-white">Total Terpakai</CardTitle>
+              <CardTitle className="text-sm neo-heading text-white">Terpakai</CardTitle>
             </CardHeader>
             <CardContent className="pt-0 sm:pt-0">
               <p className="text-xl sm:text-2xl font-black text-red-600">
@@ -412,7 +412,7 @@ export default async function BudgetDetailPage({ params }: { params: Promise<{ i
 
                       <div className="space-y-1 text-xs">
                         <div className="flex justify-between">
-                          <span className="font-bold">Makan:</span>
+                          <span className="font-bold">Makanan & Minuman:</span>
                           <span className="font-black text-red-600">
                             -Rp {allocation.mealExpenses.toLocaleString('id-ID')}
                           </span>

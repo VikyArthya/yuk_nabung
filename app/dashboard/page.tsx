@@ -271,7 +271,7 @@ export default async function DashboardPage() {
               <div>
                 <h1 className="neo-heading text-3xl sm:text-5xl flex items-center space-x-4">
                   <span className="text-4xl sm:text-5xl">🍽️</span>
-                  <span>Dashboard Makan</span>
+                  <span>Dashboard Keuangan</span>
                 </h1>
                 <p className="neo-text text-lg mt-2">Halo, {dashboardData.user.name}! 👋</p>
               </div>
@@ -295,7 +295,7 @@ export default async function DashboardPage() {
                       Selamat Datang di YukNabung!
                     </h2>
                     <p className="neo-text mt-2">
-                      Mulai perjalanan tracking pengeluaran makan Anda hari ini
+                      Mulai perjalanan tracking pengeluaran harian Anda hari ini
                     </p>
                   </div>
                 </div>
@@ -359,7 +359,7 @@ export default async function DashboardPage() {
                       <ul className="neo-text text-sm space-y-2 text-left font-bold">
                         <li>• Buat budget bulanan dengan gaji dan target pengeluaran</li>
                         <li>• Daily budget otomatis dihitung: weekly budget ÷ 7 hari</li>
-                        <li>• Catat setiap pengeluaran makan untuk tracking</li>
+                        <li>• Catat setiap pengeluaran harian untuk tracking</li>
                         <li>• Lihat sisa budget dan tabungan yang terkumpul</li>
                       </ul>
                     </div>
@@ -382,7 +382,7 @@ export default async function DashboardPage() {
             <div>
               <h1 className="neo-heading text-3xl sm:text-5xl flex items-center space-x-4">
                 <span className="text-4xl sm:text-5xl">🍽️</span>
-                <span>Dashboard Makan</span>
+                <span>Dashboard Keuangan</span>
               </h1>
               <p className="neo-text text-lg mt-2">Halo, {dashboardData.user.name}! 👋</p>
             </div>

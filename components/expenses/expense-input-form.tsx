@@ -107,9 +107,9 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
   return (
     <Card className="neo-card-raised">
       <CardHeader className="pb-3 sm:pb-6 neo-orange border-b-4 border-black">
-        <CardTitle className="text-base sm:text-lg neo-heading text-white">🍽️ Catat Pengeluaran Makan</CardTitle>
+        <CardTitle className="text-base sm:text-lg neo-heading text-white">💰 Catat Pengeluaran Harian</CardTitle>
         <CardDescription className="text-xs sm:text-sm neo-text">
-          Input pengeluaran makan hari ini
+          Input pengeluaran harian Anda
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 sm:pt-0">
@@ -171,7 +171,7 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
             <Input
               id="note"
               type="text"
-              placeholder="contoh: Makan siang di kantin"
+              placeholder="contoh: Beli makan siang di kantin"
               value={note}
               onChange={(e) => setNote(e.target.value)}
               className="neo-input"

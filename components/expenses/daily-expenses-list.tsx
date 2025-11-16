@@ -96,7 +96,7 @@ export function DailyExpensesList({
               >
                 <div className="flex-1 min-w-0">
                   <p className="font-black text-sm truncate">
-                    {expense.note || 'Pengeluaran makan'}
+                    {expense.note || 'Pengeluaran harian'}
                   </p>
                   <p className="text-xs font-bold">
                     {formatTime(expense.date)}
@@ -127,7 +127,7 @@ export function DailyExpensesList({
         ) : (
           <div className="text-center py-6 bg-white border-2 border-black shadow-[4px_4px_0px_black]">
             <p className="text-gray-700 text-sm font-black">Belum ada pengeluaran hari ini</p>
-            <p className="text-gray-600 text-xs mt-1 font-bold">Ayo catat pengeluaran makan pertama Anda!</p>
+            <p className="text-gray-600 text-xs mt-1 font-bold">Ayo catat pengeluaran harian pertama Anda!</p>
           </div>
         )}
       </CardContent>
