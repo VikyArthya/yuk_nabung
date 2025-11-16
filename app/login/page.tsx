@@ -45,7 +45,7 @@ export default function LoginPage() {
       <div className="bg-white border-4 border-black shadow-[8px_8px_0px_black] max-w-md w-full space-y-8 p-8 neo-interactive hover:shadow-[10px_10px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
         <div>
           <h2 className="mt-6 text-center neo-heading text-3xl flex items-center justify-center space-x-3">
-            <span>🍽️</span>
+            <span>🔑</span>
             <span>Masuk ke YukNabung App</span>
           </h2>
           <p className="mt-2 text-center neo-text text-sm">

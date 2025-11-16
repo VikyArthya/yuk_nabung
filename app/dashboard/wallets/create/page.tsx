@@ -18,69 +18,90 @@ export default async function CreateWalletPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-yellow-50 to-white">
+    <div className="neo-yellow min-h-screen">
       {/* Header */}
-      <header className="bg-white/90 backdrop-blur-sm border-b border-orange-200 shadow-sm">
-        <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center">
-            <div className="flex items-center space-x-4">
-              <Link href="/dashboard/wallets">
-                <Button variant="outline" className="border-orange-500 text-orange-500 hover:bg-orange-50">← Kembali</Button>
-              </Link>
-              <h1 className="text-2xl font-bold text-gray-900">
-                <span className="text-orange-500">💳</span> Tambah Dompet Baru
+      <header className="neo-border-b-4 border-black bg-white">
+        <div className="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
+            <div>
+              <h1 className="neo-heading text-3xl sm:text-5xl flex items-center space-x-4">
+                <span>Tambah Dompet Baru</span>
               </h1>
+              <p className="neo-text text-lg mt-2">Buat dompet baru untuk mengelola keuangan Anda</p>
             </div>
-            <SignOutButton />
+            <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+              <Link href="/dashboard/wallets">
+                <Button className="neo-gray">← Kembali</Button>
+              </Link>
+              <SignOutButton />
+            </div>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-2xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-        <Card className="border-orange-100">
-          <CardHeader className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-t-lg">
-            <CardTitle className="text-orange-700">💼 Buat Dompet Baru</CardTitle>
-            <CardDescription className="text-orange-600">
-              Tambahkan dompet baru untuk mengelola keuangan Anda
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <CreateWalletForm userId={session.user.id} />
-          </CardContent>
-        </Card>
+      <main className="max-w-4xl mx-auto py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Main Form */}
+          <div className="lg:col-span-2">
+            <Card className="neo-card-raised">
+              <CardHeader className="neo-orange border-b-4 border-black">
+                <CardTitle className="neo-heading text-white">Buat Dompet Baru</CardTitle>
+                <CardDescription className="text-xs sm:text-sm neo-text text-white">
+                  Tambahkan dompet baru untuk mengelola keuangan Anda
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0 sm:pt-0">
+                <CreateWalletForm userId={session.user.id} />
+              </CardContent>
+            </Card>
+          </div>
 
-        {/* Quick Examples */}
-        <Card className="mt-8 border-orange-100">
-          <CardHeader className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-t-lg">
-            <CardTitle className="text-orange-700">🏦 Contoh Dompet</CardTitle>
-            <CardDescription className="text-orange-600">
-              Beberapa contoh dompet yang biasa digunakan
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="p-4 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors">
-                <h4 className="font-medium mb-2 text-orange-700">🏦 Bank</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Seabank</li>
-                  <li>• BCA</li>
-                  <li>• Mandiri</li>
-                  <li>• BNI</li>
-                </ul>
-              </div>
-              <div className="p-4 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors">
-                <h4 className="font-medium mb-2 text-orange-700">📱 E-Wallet</h4>
-                <ul className="text-sm text-gray-600 space-y-1">
-                  <li>• Gopay</li>
-                  <li>• OVO</li>
-                  <li>• Dana</li>
-                  <li>• ShopeePay</li>
-                </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+          {/* Examples Sidebar */}
+          <div className="lg:col-span-1">
+            <Card className="neo-card-raised">
+              <CardHeader className="neo-blue border-b-4 border-black">
+                <CardTitle className="neo-heading text-white">Contoh Dompet</CardTitle>
+                <CardDescription className="text-xs sm:text-sm neo-text text-white">
+                  Beberapa contoh dompet yang biasa digunakan
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0 sm:pt-0">
+                <div className="space-y-4">
+                  <div className="bg-green-100 border-2 border-black shadow-[4px_4px_0px_black] p-4 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
+                    <h4 className="font-black mb-3 text-green-700">Bank</h4>
+                    <ul className="text-sm font-bold space-y-1">
+                      <li>• Seabank</li>
+                      <li>• BCA</li>
+                      <li>• Mandiri</li>
+                      <li>• BNI</li>
+                      <li>• BRI</li>
+                    </ul>
+                  </div>
+                  <div className="bg-purple-100 border-2 border-black shadow-[4px_4px_0px_black] p-4 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
+                    <h4 className="font-black mb-3 text-purple-700">E-Wallet</h4>
+                    <ul className="text-sm font-bold space-y-1">
+                      <li>• Gopay</li>
+                      <li>• OVO</li>
+                      <li>• Dana</li>
+                      <li>• ShopeePay</li>
+                      <li>• LinkAja</li>
+                    </ul>
+                  </div>
+                  <div className="bg-yellow-100 border-2 border-black shadow-[4px_4px_0px_black] p-4 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
+                    <h4 className="font-black mb-3 text-yellow-700">Lainnya</h4>
+                    <ul className="text-sm font-bold space-y-1">
+                      <li>• Tunai</li>
+                      <li>• Kartu Kredit</li>
+                      <li>• PayPal</li>
+                      <li>• Crypto</li>
+                    </ul>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </main>
     </div>
   );

@@ -50,8 +50,8 @@ export default async function CreateBudgetPage() {
               <Link href="/dashboard/budget">
                 <Button variant="outline">← Kembali</Button>
               </Link>
-              <h1 className="neo-heading text-2xl">
-                <span>📊</span> Buat Budget Baru
+              <h1 className="neo-heading text-3xl sm:text-5xl">
+                Buat Budget Baru
               </h1>
             </div>
             <SignOutButton />
@@ -63,7 +63,7 @@ export default async function CreateBudgetPage() {
       <main className="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <Card className="neo-card-raised">
           <CardHeader className="neo-yellow border-b-4 border-black">
-            <CardTitle className="neo-heading">📅 Buat Budget Bulanan</CardTitle>
+            <CardTitle className="neo-heading">Buat Budget Bulanan</CardTitle>
             <CardDescription className="neo-text">
               Atur gaji, target nabung, dan alokasi dompet untuk bulan {monthNames[currentMonth - 1]} {currentYear}
             </CardDescription>
@@ -79,61 +79,69 @@ export default async function CreateBudgetPage() {
         </Card>
 
         {/* Budget Guidelines */}
-        <Card className="mt-8 border-orange-100">
-          <CardHeader className="bg-gradient-to-r from-orange-50 to-yellow-50 rounded-t-lg">
-            <CardTitle className="text-orange-700">💡 Panduan Budget</CardTitle>
-            <CardDescription className="text-orange-600">
-              Tips dan rekomendasi untuk membuat budget yang efektif
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="space-y-4">
-                <h4 className="font-medium text-lg text-orange-700">💰 Rekomendasi Alokasi</h4>
+        <div className="mt-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Rekomendasi Alokasi */}
+            <Card className="neo-card-raised">
+              <CardHeader className="neo-green border-b-4 border-black">
+                <CardTitle className="neo-heading text-white">Rekomendasi Alokasi</CardTitle>
+                <CardDescription className="text-xs sm:text-sm neo-text text-white">
+                  Berdasarkan total saldo dompet Anda
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0 sm:pt-0">
                 <div className="space-y-3">
-                  <div className="flex justify-between p-3 bg-green-50 border border-green-200 rounded-lg hover:bg-green-100 transition-colors">
-                    <span>Tabungan (20%)</span>
-                    <span className="font-medium text-green-700">Rp {(userWallets.reduce((total, wallet) => total + Number(wallet.balance), 0) * 0.2).toLocaleString('id-ID')}</span>
+                  <div className="bg-green-50 border-2 border-black shadow-[4px_4px_0px_black] p-4 flex justify-between items-center neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
+                    <span className="font-black">Tabungan (20%)</span>
+                    <span className="font-black text-green-700">Rp {(userWallets.reduce((total, wallet) => total + Number(wallet.balance), 0) * 0.2).toLocaleString('id-ID')}</span>
                   </div>
-                  <div className="flex justify-between p-3 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors">
-                    <span>Kebutuhan (50%)</span>
-                    <span className="font-medium text-blue-700">Rp {(userWallets.reduce((total, wallet) => total + Number(wallet.balance), 0) * 0.5).toLocaleString('id-ID')}</span>
+                  <div className="bg-blue-50 border-2 border-black shadow-[4px_4px_0px_black] p-4 flex justify-between items-center neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
+                    <span className="font-black">Kebutuhan (50%)</span>
+                    <span className="font-black text-blue-700">Rp {(userWallets.reduce((total, wallet) => total + Number(wallet.balance), 0) * 0.5).toLocaleString('id-ID')}</span>
                   </div>
-                  <div className="flex justify-between p-3 bg-orange-50 border border-orange-200 rounded-lg hover:bg-orange-100 transition-colors">
-                    <span>Keinginan (30%)</span>
-                    <span className="font-medium text-orange-700">Rp {(userWallets.reduce((total, wallet) => total + Number(wallet.balance), 0) * 0.3).toLocaleString('id-ID')}</span>
+                  <div className="bg-orange-50 border-2 border-black shadow-[4px_4px_0px_black] p-4 flex justify-between items-center neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
+                    <span className="font-black">Keinginan (30%)</span>
+                    <span className="font-black text-orange-700">Rp {(userWallets.reduce((total, wallet) => total + Number(wallet.balance), 0) * 0.3).toLocaleString('id-ID')}</span>
                   </div>
                 </div>
-              </div>
+              </CardContent>
+            </Card>
 
-              <div className="space-y-4">
-                <h4 className="font-medium text-lg text-orange-700">📋 Tips Budget</h4>
-                <ul className="space-y-2 text-sm text-gray-600">
-                  <li className="flex items-start">
-                    <span className="text-orange-500 mr-2">✓</span>
-                    <span>Prioritaskan tabungan minimal 10-20% dari gaji</span>
+            {/* Tips Budget */}
+            <Card className="neo-card-raised">
+              <CardHeader className="neo-purple border-b-4 border-black">
+                <CardTitle className="neo-heading text-white">Tips Budget</CardTitle>
+                <CardDescription className="text-xs sm:text-sm neo-text text-white">
+                  Panduan untuk membuat budget efektif
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0 sm:pt-0">
+                <ul className="space-y-3">
+                  <li className="flex items-start bg-white border-2 border-black shadow-[4px_4px_0px_black] p-4 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
+                    <span className="text-green-600 mr-3 text-lg font-black">✓</span>
+                    <span className="font-bold">Prioritaskan tabungan minimal 10-20% dari gaji</span>
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-orange-500 mr-2">✓</span>
-                    <span>Alokasikan dana ke berbagai dompet untuk memudahkan tracking</span>
+                  <li className="flex items-start bg-white border-2 border-black shadow-[4px_4px_0px_black] p-4 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
+                    <span className="text-blue-600 mr-3 text-lg font-black">✓</span>
+                    <span className="font-bold">Alokasikan dana ke berbagai dompet untuk memudahkan tracking</span>
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-orange-500 mr-2">✓</span>
-                    <span>Buat target pengeluaran yang realistis</span>
+                  <li className="flex items-start bg-white border-2 border-black shadow-[4px_4px_0px_black] p-4 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
+                    <span className="text-purple-600 mr-3 text-lg font-black">✓</span>
+                    <span className="font-bold">Buat target pengeluaran yang realistis</span>
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-orange-500 mr-2">✓</span>
-                    <span>Review dan sesuaikan budget setiap bulan</span>
+                  <li className="flex items-start bg-white border-2 border-black shadow-[4px_4px_0px_black] p-4 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
+                    <span className="text-orange-600 mr-3 text-lg font-black">✓</span>
+                    <span className="font-bold">Review dan sesuaikan budget setiap bulan</span>
                   </li>
-                  <li className="flex items-start">
-                    <span className="text-orange-500 mr-2">✓</span>
-                    <span>Sisihkan dana darurat untuk keadaan tak terduga</span>
+                  <li className="flex items-start bg-white border-2 border-black shadow-[4px_4px_0px_black] p-4 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
+                    <span className="text-red-600 mr-3 text-lg font-black">✓</span>
+                    <span className="font-bold">Sisihkan dana darurat untuk keadaan tak terduga</span>
                   </li>
                 </ul>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
       </main>
     </div>
   );

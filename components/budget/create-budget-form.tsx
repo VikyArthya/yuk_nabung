@@ -182,8 +182,8 @@ export default function CreateBudgetForm({
       </div>
 
       {/* Income and Targets */}
-      <div className="space-y-4">
-        <h3 className="text-lg font-medium">Penghasilan dan Target</h3>
+      <div className="space-y-6">
+        <h3 className="neo-heading text-2xl">Penghasilan dan Target</h3>
 
         <div className="space-y-2">
           <Label htmlFor="salary">Gaji Bulanan</Label>
@@ -258,67 +258,124 @@ export default function CreateBudgetForm({
 
       {/* Wallet Allocations */}
       {wallets.length > 0 && (
-        <div className="space-y-4">
-          <h3 className="text-lg font-medium">Alokasi Dompet</h3>
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-            <p className="text-sm text-blue-700">
-              💰 <strong>Info:</strong> Saldo dompet akan bertambah secara otomatis sesuai alokasi yang diisi di sini.
-            </p>
-            <p className="text-sm text-blue-600 mt-1">
+        <div className="space-y-6">
+          <h3 className="neo-heading text-2xl">Alokasi Dompet</h3>
+
+          {/* Info Card */}
+          <div className="bg-blue-100 border-2 border-black shadow-[4px_4px_0px_black] p-6 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
+            <div className="flex items-center space-x-3 mb-2">
+              <div className="w-10 h-10 bg-white border-2 border-black shadow-[2px_2px_0px_black] flex items-center justify-center">
+                <span className="text-lg font-black">ℹ️</span>
+              </div>
+              <div>
+                <p className="font-black text-blue-700">Informasi Alokasi</p>
+                <p className="text-sm font-bold text-blue-600 mt-1">
+                  Saldo dompet akan bertambah sesuai alokasi yang diisi
+                </p>
+              </div>
+            </div>
+            <p className="text-sm font-bold text-blue-600 mt-3">
               Total saldo dompet = saldo awal + alokasi budget
             </p>
           </div>
 
-          <div className="space-y-3">
+          {/* Wallet Allocation Cards */}
+          <div className="space-y-4">
             {wallets.map((wallet) => {
               const allocationAmount = parseFloat(allocations[wallet.id] || "0");
               const totalBalance = wallet.balance + allocationAmount;
 
               return (
-                <div key={wallet.id} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex-1">
-                    <Label htmlFor={`wallet-${wallet.id}`} className="font-medium">
-                      {wallet.name}
-                      <span className="text-sm text-gray-500 ml-2 capitalize">
-                        ({wallet.type.toLowerCase()})
-                      </span>
-                    </Label>
-                    <div className="text-xs text-gray-500 mt-1">
-                      Saldo awal: Rp {wallet.balance.toLocaleString('id-ID')}
-                      {allocationAmount > 0 && (
-                        <span className="text-green-600 ml-2">
-                          → Total: Rp {totalBalance.toLocaleString('id-ID')}
-                        </span>
-                      )}
+                <div key={wallet.id} className="bg-white border-2 border-black shadow-[4px_4px_0px_black] p-6 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1">
+                      <div className="flex items-center space-x-3 mb-3">
+                        <div className="w-12 h-12 bg-green-100 border-2 border-black shadow-[2px_2px_0px_black] flex items-center justify-center">
+                          <span className="text-xl font-black">💳</span>
+                        </div>
+                        <div>
+                          <Label htmlFor={`wallet-${wallet.id}`} className="font-black text-lg">
+                            {wallet.name}
+                          </Label>
+                          <p className="text-sm font-bold text-gray-600 capitalize">
+                            ({wallet.type.toLowerCase()})
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="bg-gray-50 border-2 border-black p-4 mb-4">
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-bold text-gray-700">Saldo Awal:</span>
+                          <span className="font-black text-gray-900">
+                            Rp {wallet.balance.toLocaleString('id-ID')}
+                          </span>
+                        </div>
+                        {allocationAmount > 0 && (
+                          <div className="flex justify-between items-center mb-2">
+                            <span className="text-sm font-bold text-green-600">Alokasi:</span>
+                            <span className="font-black text-green-600">
+                              +Rp {allocationAmount.toLocaleString('id-ID')}
+                            </span>
+                          </div>
+                        )}
+                        <div className="flex justify-between items-center pt-2 border-t-2 border-black">
+                          <span className="text-sm font-bold text-blue-600">Total Saldo:</span>
+                          <span className="font-black text-blue-600">
+                            Rp {totalBalance.toLocaleString('id-ID')}
+                          </span>
+                        </div>
+                      </div>
+
+                      <Input
+                        id={`wallet-${wallet.id}`}
+                        type="number"
+                        placeholder="0"
+                        step="10000"
+                        min="0"
+                        value={allocations[wallet.id] || ""}
+                        onChange={(e) => handleAllocationChange(wallet.id, e.target.value)}
+                        className="neo-input"
+                      />
+                      <p className="text-xs font-bold text-gray-600 mt-2">
+                        Masukkan jumlah alokasi untuk dompet ini
+                      </p>
                     </div>
-                    <Input
-                      id={`wallet-${wallet.id}`}
-                      type="number"
-                      placeholder="0"
-                      step="10000"
-                      min="0"
-                      value={allocations[wallet.id] || ""}
-                      onChange={(e) => handleAllocationChange(wallet.id, e.target.value)}
-                      className="mt-2"
-                    />
                   </div>
                 </div>
               );
             })}
           </div>
 
-          <div className="p-4 bg-gray-50 rounded-lg">
-            <div className="flex justify-between text-lg font-medium">
-              <span>Total Alokasi:</span>
-              <span>Rp {getTotalAllocations().toLocaleString('id-ID')}</span>
+          {/* Total Allocation Summary */}
+          <div className="bg-yellow-100 border-2 border-black shadow-[4px_4px_0px_black] p-6">
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-lg font-black text-yellow-800">Total Alokasi:</span>
+              <span className="text-2xl font-black text-yellow-900">
+                Rp {getTotalAllocations().toLocaleString('id-ID')}
+              </span>
             </div>
+
             {parseFloat(formData.spendingTarget) > 0 && (
-              <div className="text-sm text-gray-600 mt-1">
-                Target Pengeluaran: Rp {parseFloat(formData.spendingTarget).toLocaleString('id-ID')}
-                {getTotalAllocations() > parseFloat(formData.spendingTarget) && (
-                  <span className="text-red-500 block mt-1">
-                    ⚠️ Total alokasi melebihi target pengeluaran
+              <div className="bg-white border-2 border-black p-4">
+                <div className="flex justify-between items-center mb-2">
+                  <span className="text-sm font-bold text-gray-700">Target Pengeluaran:</span>
+                  <span className="font-black text-gray-900">
+                    Rp {parseFloat(formData.spendingTarget).toLocaleString('id-ID')}
                   </span>
+                </div>
+                {getTotalAllocations() > parseFloat(formData.spendingTarget) && (
+                  <div className="bg-red-100 border-2 border-black p-3 mt-2">
+                    <p className="font-black text-red-700 text-center">
+                      ⚠️ Total alokasi melebihi target pengeluaran!
+                    </p>
+                  </div>
+                )}
+                {getTotalAllocations() < parseFloat(formData.spendingTarget) && (
+                  <div className="bg-green-100 border-2 border-black p-3 mt-2">
+                    <p className="font-black text-green-700 text-center">
+                      Sisa target: Rp {(parseFloat(formData.spendingTarget) - getTotalAllocations()).toLocaleString('id-ID')}
+                    </p>
+                  </div>
                 )}
               </div>
             )}
@@ -327,20 +384,19 @@ export default function CreateBudgetForm({
       )}
 
       {/* Submit Buttons */}
-      <div className="flex space-x-3">
+      <div className="flex space-x-4">
         <Button
           type="submit"
           disabled={isLoading || !formData.salary}
-          className="flex-1 bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0"
+          className="flex-1 neo-orange text-white font-black text-lg py-4 px-8 neo-interactive"
         >
           {isLoading ? "Menyimpan..." : "Buat Budget"}
         </Button>
         <Button
           type="button"
-          variant="outline"
           onClick={() => router.back()}
           disabled={isLoading}
-          className="border-orange-500 text-orange-500 hover:bg-orange-50"
+          className="neo-gray font-black text-lg py-4 px-8 neo-interactive"
         >
           Batal
         </Button>

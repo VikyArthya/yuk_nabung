@@ -270,7 +270,7 @@ export default async function DashboardPage() {
             <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
               <div>
                 <h1 className="neo-heading text-3xl sm:text-5xl flex items-center space-x-4">
-                  <span className="text-4xl sm:text-5xl">🍽️</span>
+                  <span className="text-4xl sm:text-5xl">📊</span>
                   <span>Dashboard Keuangan</span>
                 </h1>
                 <p className="neo-text text-lg mt-2">Halo, {dashboardData.user.name}! 👋</p>
@@ -381,7 +381,7 @@ export default async function DashboardPage() {
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-4 sm:space-y-0">
             <div>
               <h1 className="neo-heading text-3xl sm:text-5xl flex items-center space-x-4">
-                <span className="text-4xl sm:text-5xl">🍽️</span>
+                <span className="text-4xl sm:text-5xl">📊</span>
                 <span>Dashboard Keuangan</span>
               </h1>
               <p className="neo-text text-lg mt-2">Halo, {dashboardData.user.name}! 👋</p>
