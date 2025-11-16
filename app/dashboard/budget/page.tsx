@@ -179,8 +179,8 @@ export default function BudgetPage() {
       <main className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         {/* Current Month Status */}
         <Card className="mb-8 neo-card-raised">
-          <CardHeader className="neo-yellow border-b-4 border-black">
-            <CardTitle className="neo-heading">📅 Status Budget {monthNames[currentMonth - 1]} {currentYear}</CardTitle>
+          <CardHeader className="neo-blue border-b-4 border-black">
+            <CardTitle className="neo-heading text-white">📅 Status Budget {monthNames[currentMonth - 1]} {currentYear}</CardTitle>
             <CardDescription className="neo-text">
               Overview budget bulan ini
             </CardDescription>
@@ -220,8 +220,8 @@ export default function BudgetPage() {
 
         {/* Budget List */}
         <Card className="neo-card-raised">
-          <CardHeader className="neo-yellow border-b-4 border-black">
-            <CardTitle className="neo-heading">📋 Daftar Budget {currentYear}</CardTitle>
+          <CardHeader className="neo-purple border-b-4 border-black">
+            <CardTitle className="neo-heading text-white">📋 Daftar Budget {currentYear}</CardTitle>
             <CardDescription className="neo-text">
               Semua budget yang telah dibuat tahun ini
             </CardDescription>
@@ -330,33 +330,33 @@ export default function BudgetPage() {
 
         {/* Quick Tips */}
         <Card className="mt-8 neo-card-raised">
-          <CardHeader className="neo-yellow border-b-4 border-black">
-            <CardTitle className="neo-heading">💡 Tips Budget</CardTitle>
+          <CardHeader className="neo-green border-b-4 border-black">
+            <CardTitle className="neo-heading text-white">💡 Tips Budget</CardTitle>
             <CardDescription className="neo-text">
               Beberapa tips untuk mengelola budget dengan efektif
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-4 bg-white border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
+              <div className="p-4 bg-blue-100 border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
                 <h4 className="font-black mb-2">💰 50/30/20 Rule</h4>
                 <p className="neo-text text-sm">
                   Alokasikan 50% untuk kebutuhan, 30% untuk keinginan, dan 20% untuk tabungan
                 </p>
               </div>
-              <div className="p-4 bg-white border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
+              <div className="p-4 bg-orange-100 border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
                 <h4 className="font-black mb-2">📈 Track Pengeluaran</h4>
                 <p className="neo-text text-sm">
                   Catat setiap pengeluaran untuk memantau budget tetap on track
                 </p>
               </div>
-              <div className="p-4 bg-white border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
+              <div className="p-4 bg-pink-100 border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
                 <h4 className="font-black mb-2">🎯 Set Realistic Goals</h4>
                 <p className="neo-text text-sm">
                   Buat target yang realistis sesuai dengan penghasilan dan gaya hidup
                 </p>
               </div>
-              <div className="p-4 bg-white border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
+              <div className="p-4 bg-green-100 border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
                 <h4 className="font-black mb-2">🔄 Review Rutin</h4>
                 <p className="neo-text text-sm">
                   Review budget mingguan untuk melakukan penyesuaian jika diperlukan

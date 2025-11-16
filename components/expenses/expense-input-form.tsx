@@ -105,17 +105,17 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
   };
 
   return (
-    <Card className="border-orange-100">
-      <CardHeader className="pb-3 sm:pb-6 bg-gradient-to-r from-orange-50 to-yellow-50 rounded-t-lg">
-        <CardTitle className="text-base sm:text-lg text-orange-700">🍽️ Catat Pengeluaran Makan</CardTitle>
-        <CardDescription className="text-xs sm:text-sm text-orange-600">
+    <Card className="neo-card-raised">
+      <CardHeader className="pb-3 sm:pb-6 neo-orange border-b-4 border-black">
+        <CardTitle className="text-base sm:text-lg neo-heading text-white">🍽️ Catat Pengeluaran Makan</CardTitle>
+        <CardDescription className="text-xs sm:text-sm neo-text">
           Input pengeluaran makan hari ini
         </CardDescription>
       </CardHeader>
       <CardContent className="pt-0 sm:pt-0">
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="amount" className="text-sm font-medium">
+            <Label htmlFor="amount" className="text-sm font-bold">
               Nominal (Rp) *
             </Label>
             <Input
@@ -127,16 +127,18 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               required
-              className="border-orange-200 focus:border-orange-500 focus:ring-orange-500"
+              className="neo-input"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="wallet" className="text-sm font-medium">
+            <Label htmlFor="wallet" className="text-sm font-bold">
               Dompet *
             </Label>
             {isLoadingWallets ? (
-              <div className="text-sm text-gray-500 py-2">Memuat dompet...</div>
+              <div className="bg-white border-2 border-black shadow-[4px_4px_0px_black] p-4 text-sm font-bold">
+                Memuat dompet...
+              </div>
             ) : wallets.length > 0 ? (
               <select
                 id="wallet"
@@ -153,9 +155,9 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
                 ))}
               </select>
             ) : (
-              <div className="text-sm text-red-500 py-2 border border-red-200 rounded-md bg-red-50 px-3">
+              <div className="bg-white border-2 border-black shadow-[4px_4px_0px_black] p-4 text-sm font-black">
                 ⚠️ Wajib buat dompet terlebih dahulu!
-                <a href="/dashboard/wallets/create" className="text-orange-600 hover:underline ml-1 font-medium">
+                <a href="/dashboard/wallets/create" className="neo-inline-link ml-1">
                   Buat dompet sekarang
                 </a>
               </div>
@@ -163,7 +165,7 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="note" className="text-sm font-medium">
+            <Label htmlFor="note" className="text-sm font-bold">
               Catatan (opsional)
             </Label>
             <Input
@@ -172,16 +174,16 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
               placeholder="contoh: Makan siang di kantin"
               value={note}
               onChange={(e) => setNote(e.target.value)}
-              className="border-orange-200 focus:border-orange-500 focus:ring-orange-500"
+              className="neo-input"
             />
           </div>
 
           {message && (
             <div
-              className={`p-3 rounded-lg text-sm ${
+              className={`p-4 border-2 border-black shadow-[4px_4px_0px_black] font-black text-sm ${
                 message.type === "success"
-                  ? "bg-green-50 text-green-700 border border-green-200"
-                  : "bg-red-50 text-red-700 border border-red-200"
+                  ? "bg-green-100 border-green-800 text-green-800"
+                  : "bg-red-100 border-red-800 text-red-800"
               }`}
             >
               {message.text}
@@ -191,7 +193,7 @@ export function ExpenseInputForm({ onExpenseAdded }: ExpenseInputFormProps) {
           <Button
             type="submit"
             disabled={isLoading || !amount || !walletId || wallets.length === 0}
-            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-0"
+            className="w-full neo-orange text-white font-black text-lg py-3 px-6 neo-interactive"
           >
             {isLoading ? "Menyimpan..." : "Catat Pengeluaran"}
           </Button>

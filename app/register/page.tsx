@@ -66,17 +66,18 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-yellow-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="neo-yellow min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="bg-white border-4 border-black shadow-[8px_8px_0px_black] max-w-md w-full space-y-8 p-8 neo-interactive hover:shadow-[10px_10px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
         <div>
-          <h2 className="mt-6 text-center neo-heading text-3xl">
-            Buat Akun Baru
+          <h2 className="mt-6 text-center neo-heading text-3xl flex items-center justify-center space-x-3">
+            <span>🎯</span>
+            <span>Buat Akun Baru</span>
           </h2>
           <p className="mt-2 text-center neo-text text-sm">
             Atau{" "}
             <Link
               href="/login"
-              className="font-bold text-blue-600 hover:text-blue-800 underline decoration-4 underline-offset-2 neo-inline-link"
+              className="font-black text-blue-600 hover:text-blue-800 underline decoration-4 underline-offset-2 neo-inline-link"
             >
               masuk ke akun yang ada
             </Link>
@@ -84,18 +85,18 @@ export default function RegisterPage() {
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           {error && (
-            <div className="neo-red text-white px-4 py-3 neo-border neo-shadow-lg font-black text-sm">
+            <div className="bg-red-100 border-2 border-black shadow-[4px_4px_0px_black] px-4 py-3 font-black text-sm text-red-800">
               {error}
             </div>
           )}
           {success && (
-            <div className="neo-green text-white px-4 py-3 neo-border neo-shadow-lg font-black text-sm">
+            <div className="bg-green-100 border-2 border-black shadow-[4px_4px_0px_black] px-4 py-3 font-black text-sm text-green-800">
               {success}
             </div>
           )}
           <div className="space-y-4">
             <div>
-              <Label htmlFor="name">Nama Lengkap</Label>
+              <Label htmlFor="name" className="text-sm font-bold">Nama Lengkap</Label>
               <Input
                 id="name"
                 name="name"
@@ -103,12 +104,12 @@ export default function RegisterPage() {
                 required
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-1"
+                className="mt-1 neo-input"
                 placeholder="John Doe"
               />
             </div>
             <div>
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="text-sm font-bold">Email</Label>
               <Input
                 id="email"
                 name="email"
@@ -117,12 +118,12 @@ export default function RegisterPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1"
+                className="mt-1 neo-input"
                 placeholder="email@example.com"
               />
             </div>
             <div>
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="text-sm font-bold">Password</Label>
               <Input
                 id="password"
                 name="password"
@@ -130,12 +131,12 @@ export default function RegisterPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1"
+                className="mt-1 neo-input"
                 placeholder="Minimal 6 karakter"
               />
             </div>
             <div>
-              <Label htmlFor="confirmPassword">Konfirmasi Password</Label>
+              <Label htmlFor="confirmPassword" className="text-sm font-bold">Konfirmasi Password</Label>
               <Input
                 id="confirmPassword"
                 name="confirmPassword"
@@ -143,7 +144,7 @@ export default function RegisterPage() {
                 required
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
-                className="mt-1"
+                className="mt-1 neo-input"
                 placeholder="Ketik ulang password"
               />
             </div>
@@ -153,7 +154,7 @@ export default function RegisterPage() {
             <Button
               type="submit"
               disabled={isLoading}
-              className="w-full"
+              className="w-full neo-green text-white font-black text-lg py-3 px-6 neo-interactive"
             >
               {isLoading ? "Mendaftar..." : "Buat Akun"}
             </Button>

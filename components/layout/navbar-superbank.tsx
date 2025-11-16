@@ -52,24 +52,24 @@ export default function NavbarSuperbank() {
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? "bg-white/98 backdrop-blur-sm shadow-md border-b border-orange-100"
-          : "bg-white border-b border-orange-100"
+          ? "bg-white border-b-4 border-black shadow-[4px_4px_0px_black]"
+          : "bg-white border-b-4 border-black"
       }`}
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-3">
-            <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-yellow-400 rounded-lg flex items-center justify-center shadow-sm">
-              <span className="text-white font-bold text-lg">💰</span>
+          <Link href="/" className="flex items-center space-x-3 neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px] transition-all duration-200 p-2">
+            <div className="w-10 h-10 bg-orange-100 border-4 border-black shadow-[4px_4px_0px_black] flex items-center justify-center">
+              <span className="font-black text-2xl">💰</span>
             </div>
             <div>
-              <span className="text-xl font-bold text-gray-900 hidden sm:block">
-                <span className="text-orange-500">Nabung</span>
+              <span className="text-xl font-black text-gray-900 hidden sm:block">
+                <span className="text-orange-600">Nabung</span>
                 <span className="text-gray-900">ku</span>
               </span>
-              <span className="text-lg font-bold text-gray-900 sm:hidden">
-                <span className="text-orange-500">N</span>abungku
+              <span className="text-lg font-black text-gray-900 sm:hidden">
+                <span className="text-orange-600">N</span>abungku
               </span>
             </div>
           </Link>
@@ -81,7 +81,7 @@ export default function NavbarSuperbank() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="flex items-center space-x-2 text-gray-600 hover:text-orange-500 transition-colors duration-200 font-medium"
+                  className="flex items-center space-x-2 text-gray-700 hover:text-orange-600 transition-colors duration-200 font-black bg-orange-100 border-2 border-black shadow-[2px_2px_0px_black] px-4 py-2 neo-interactive hover:shadow-[4px_4px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]"
                 >
                   <link.icon className="w-4 h-4" />
                   <span>{link.label}</span>
@@ -92,7 +92,7 @@ export default function NavbarSuperbank() {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className="text-gray-600 hover:text-orange-500 transition-colors duration-200 font-medium"
+                  className="text-gray-700 hover:text-orange-600 transition-colors duration-200 font-black bg-blue-100 border-2 border-black shadow-[2px_2px_0px_black] px-4 py-2 neo-interactive hover:shadow-[4px_4px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]"
                 >
                   {link.label}
                 </Link>
@@ -103,23 +103,23 @@ export default function NavbarSuperbank() {
           {/* Right Side Actions */}
           <div className="flex items-center space-x-3">
             {status === "loading" ? (
-              <div className="w-8 h-8 border-2 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
             ) : status === "authenticated" ? (
               <>
                 {/* User Dropdown - Desktop */}
                 <div className="hidden sm:block user-menu relative">
                   <button
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    className="flex items-center space-x-3 px-4 py-2 rounded-lg hover:bg-orange-50 transition-colors duration-200"
+                    className="flex items-center space-x-3 px-4 py-2 border-2 border-black shadow-[2px_2px_0px_black] bg-orange-100 neo-interactive hover:shadow-[4px_4px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px] transition-all duration-200"
                   >
-                    <div className="w-8 h-8 bg-gradient-to-br from-orange-400 to-yellow-400 rounded-full flex items-center justify-center shadow-sm">
-                      <User className="w-4 h-4 text-white" />
+                    <div className="w-8 h-8 bg-yellow-100 border-2 border-black shadow-[2px_2px_0px_black] flex items-center justify-center">
+                      <User className="w-4 h-4 text-orange-600" />
                     </div>
-                    <span className="text-sm font-medium text-gray-700 hidden md:block">
+                    <span className="text-sm font-black text-gray-800 hidden md:block">
                       {session.user?.name}
                     </span>
                     <ChevronDown
-                      className={`w-4 h-4 text-gray-500 transition-transform duration-200 ${
+                      className={`w-4 h-4 text-gray-800 transition-transform duration-200 ${
                         isUserMenuOpen ? 'rotate-180' : ''
                       }`}
                     />
@@ -127,17 +127,17 @@ export default function NavbarSuperbank() {
 
                   {/* Dropdown Menu */}
                   {isUserMenuOpen && (
-                    <div className="absolute right-0 top-full mt-2 w-64 bg-white rounded-lg shadow-xl border border-orange-100 overflow-hidden">
-                      <div className="py-3 border-b border-gray-100">
+                    <div className="absolute right-0 top-full mt-2 w-64 bg-white border-4 border-black shadow-[8px_8px_0px_black] overflow-hidden">
+                      <div className="py-3 border-b-4 border-black bg-orange-100">
                         <div className="px-4 py-2">
-                          <p className="text-sm font-medium text-gray-900">Halo, {session.user?.name}</p>
-                          <p className="text-xs text-gray-500">{session.user?.email}</p>
+                          <p className="text-sm font-black text-gray-900">Halo, {session.user?.name}</p>
+                          <p className="text-xs font-bold text-gray-700">{session.user?.email}</p>
                         </div>
                       </div>
                       <div className="py-2">
                         <button
                           onClick={handleSignOut}
-                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 transition-colors duration-200 flex items-center space-x-2"
+                          className="w-full text-left px-4 py-2 text-sm font-black text-gray-800 hover:bg-orange-100 hover:text-orange-600 transition-colors duration-200 flex items-center space-x-2"
                         >
                           <LogOut className="w-4 h-4" />
                           <span>Keluar</span>
@@ -150,22 +150,22 @@ export default function NavbarSuperbank() {
                 {/* Simple Sign Out Button - Mobile */}
                 <button
                   onClick={handleSignOut}
-                  className="sm:hidden p-2 rounded-lg hover:bg-orange-50 transition-colors duration-200"
+                  className="sm:hidden p-2 border-2 border-black shadow-[2px_2px_0px_black] bg-red-100 neo-interactive hover:shadow-[4px_4px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px] transition-all duration-200"
                   aria-label="Sign out"
                 >
-                  <LogOut className="w-5 h-5 text-orange-500" />
+                  <LogOut className="w-5 h-5 text-red-600" />
                 </button>
               </>
             ) : (
               <>
                 {/* Sign In Button - Hidden on mobile */}
                 <Link href="/login">
-                  <Button variant="outline" size="sm" className="hidden sm:block border-orange-500 text-orange-500 hover:bg-orange-50">
+                  <Button className="hidden sm:block neo-button">
                     Masuk
                   </Button>
                 </Link>
                 <Link href="/register">
-                  <Button size="sm" className="hidden sm:block bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-orange-500">
+                  <Button size="sm" className="hidden sm:block neo-orange text-white font-black neo-interactive hover:shadow-[4px_4px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
                     Daftar
                   </Button>
                 </Link>
@@ -175,13 +175,13 @@ export default function NavbarSuperbank() {
             {/* Mobile Menu Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-orange-50 transition-colors duration-200"
+              className="lg:hidden p-2 border-2 border-black shadow-[2px_2px_0px_black] bg-yellow-100 neo-interactive hover:shadow-[4px_4px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px] transition-all duration-200"
               aria-label="Toggle menu"
             >
               {isMobileMenuOpen ? (
-                <X className="w-6 h-6 text-gray-600" />
+                <X className="w-6 h-6 text-gray-800 font-black" />
               ) : (
-                <Menu className="w-6 h-6 text-gray-600" />
+                <Menu className="w-6 h-6 text-gray-800 font-black" />
               )}
             </button>
           </div>
@@ -195,17 +195,17 @@ export default function NavbarSuperbank() {
               : "max-h-0 opacity-0 invisible"
           } overflow-hidden`}
         >
-          <div className="py-4 space-y-3 border-t border-orange-100">
+          <div className="py-4 space-y-3 border-t-4 border-black bg-yellow-50">
             {status === "authenticated" ? (
               <>
                 {/* User Info in Mobile */}
-                <div className="flex items-center space-x-3 px-4 py-3 bg-orange-50 rounded-lg">
-                  <div className="w-10 h-10 bg-gradient-to-br from-orange-400 to-yellow-400 rounded-full flex items-center justify-center shadow-sm">
-                    <User className="w-5 h-5 text-white" />
+                <div className="flex items-center space-x-3 px-4 py-3 bg-orange-100 border-2 border-black shadow-[2px_2px_0px_black] rounded-lg">
+                  <div className="w-10 h-10 bg-yellow-100 border-2 border-black shadow-[2px_2px_0px_black] flex items-center justify-center">
+                    <User className="w-5 h-5 text-orange-600" />
                   </div>
                   <div>
-                    <p className="font-medium text-gray-900">{session.user?.name}</p>
-                    <p className="text-sm text-gray-600">{session.user?.email}</p>
+                    <p className="font-black text-gray-900">{session.user?.name}</p>
+                    <p className="text-sm font-bold text-gray-700">{session.user?.email}</p>
                   </div>
                 </div>
 
@@ -215,18 +215,17 @@ export default function NavbarSuperbank() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center space-x-3 px-4 py-3 text-gray-600 hover:bg-orange-50 hover:text-orange-500 rounded-lg transition-colors duration-200"
+                    className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-orange-100 hover:text-orange-600 border-2 border-black shadow-[2px_2px_0px_black] rounded-lg transition-all duration-200 font-black neo-interactive hover:shadow-[4px_4px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]"
                   >
                     <link.icon className="w-5 h-5" />
                     <span>{link.label}</span>
                   </Link>
                 ))}
 
-                <div className="border-t border-orange-200 pt-3">
+                <div className="border-t-4 border-black pt-3">
                   <Button
-                    variant="outline"
                     onClick={handleSignOut}
-                    className="w-full flex items-center justify-center space-x-2 border-orange-500 text-orange-500 hover:bg-orange-50"
+                    className="w-full flex items-center justify-center space-x-2 neo-button"
                   >
                     <LogOut className="w-4 h-4" />
                     <span>Keluar</span>
@@ -241,20 +240,20 @@ export default function NavbarSuperbank() {
                     key={link.href}
                     href={link.href}
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="block px-4 py-3 text-gray-600 hover:bg-orange-50 hover:text-orange-500 rounded-lg transition-colors duration-200"
+                    className="block px-4 py-3 text-gray-700 hover:bg-blue-100 hover:text-blue-600 border-2 border-black shadow-[2px_2px_0px_black] rounded-lg transition-all duration-200 font-black neo-interactive hover:shadow-[4px_4px_0px_black] hover:translate-y-[-1px] hover:translate-x-[-1px]"
                   >
                     {link.label}
                   </Link>
                 ))}
 
-                <div className="border-t border-orange-200 pt-3 space-y-2">
+                <div className="border-t-4 border-black pt-3 space-y-2">
                   <Link href="/login" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full border-orange-500 text-orange-500 hover:bg-orange-50">
+                    <Button className="w-full neo-button">
                       Masuk
                     </Button>
                   </Link>
                   <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>
-                    <Button className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white border-orange-500">
+                    <Button className="w-full neo-orange text-white font-black neo-interactive hover:shadow-[4px_4px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
                       Daftar
                     </Button>
                   </Link>

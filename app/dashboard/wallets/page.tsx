@@ -53,8 +53,8 @@ export default async function WalletsPage() {
       <main className="max-w-7xl mx-auto py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
         {/* Summary Card */}
         <Card className="mb-6 sm:mb-8 neo-card-raised">
-          <CardHeader className="pb-3 sm:pb-6 neo-yellow border-b-4 border-black">
-            <CardTitle className="neo-heading text-base sm:text-lg">💰 Ringkasan Saldo</CardTitle>
+          <CardHeader className="pb-3 sm:pb-6 neo-blue border-b-4 border-black">
+            <CardTitle className="neo-heading text-base sm:text-lg text-white">💰 Ringkasan Saldo</CardTitle>
             <CardDescription className="neo-text text-xs sm:text-sm">Total saldo semua dompet</CardDescription>
           </CardHeader>
           <CardContent className="pt-0 sm:pt-0">
@@ -70,39 +70,44 @@ export default async function WalletsPage() {
         {/* Wallets Grid */}
         {wallets.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-            {wallets.map((wallet) => (
-              <Card key={wallet.id} className="neo-card-raised neo-interactive hover:shadow-[8px_8px_0px_black] hover:translate-y-[-4px] hover:translate-x-[-4px]">
-                <CardHeader className="pb-3 sm:pb-6 neo-yellow border-b-4 border-black">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1 min-w-0">
-                      <CardTitle className="font-black text-base sm:text-lg truncate">{wallet.name}</CardTitle>
-                      <CardDescription className="capitalize neo-text text-xs sm:text-sm">
-                        {wallet.type.toLowerCase()}
-                      </CardDescription>
+            {wallets.map((wallet, index) => {
+              const cardColors = ['neo-green', 'neo-purple', 'neo-pink', 'neo-orange', 'neo-blue'];
+              const colorClass = cardColors[index % cardColors.length];
+
+              return (
+                <Card key={wallet.id} className="neo-card-raised neo-interactive hover:shadow-[8px_8px_0px_black] hover:translate-y-[-4px] hover:translate-x-[-4px]">
+                  <CardHeader className={`pb-3 sm:pb-6 ${colorClass} border-b-4 border-black`}>
+                    <div className="flex justify-between items-start">
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="font-black text-base sm:text-lg truncate text-white">{wallet.name}</CardTitle>
+                        <CardDescription className="capitalize neo-text text-xs sm:text-sm">
+                          {wallet.type.toLowerCase()}
+                        </CardDescription>
+                      </div>
+                      <div className="text-xl sm:text-2xl ml-2">
+                        {wallet.type === 'BANK' ? '🏦' :
+                         wallet.type === 'EWALLET' ? '📱' : '💵'}
+                      </div>
                     </div>
-                    <div className="text-xl sm:text-2xl ml-2">
-                      {wallet.type === 'BANK' ? '🏦' :
-                       wallet.type === 'EWALLET' ? '📱' : '💵'}
+                  </CardHeader>
+                  <CardContent className="pt-0 sm:pt-0">
+                    <div className="space-y-3">
+                      <div className="text-lg sm:text-xl sm:text-2xl font-black break-all">
+                        Rp {Number(wallet.balance).toLocaleString('id-ID')}
+                      </div>
+                      <div className="flex space-x-2">
+                        <Link href={`/dashboard/wallets/${wallet.id}/add-funds`}>
+                          <Button size="sm" className="flex-1 text-xs sm:text-sm neo-orange text-white">Tambah Saldo</Button>
+                        </Link>
+                        <Link href={`/dashboard/wallets/${wallet.id}/transactions`}>
+                          <Button size="sm" variant="outline" className="flex-1 text-xs sm:text-sm">Riwayat</Button>
+                        </Link>
+                      </div>
                     </div>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-0 sm:pt-0">
-                  <div className="space-y-3">
-                    <div className="text-lg sm:text-xl sm:text-2xl font-black break-all">
-                      Rp {Number(wallet.balance).toLocaleString('id-ID')}
-                    </div>
-                    <div className="flex space-x-2">
-                      <Link href={`/dashboard/wallets/${wallet.id}/add-funds`}>
-                        <Button size="sm" className="flex-1 text-xs sm:text-sm neo-orange text-white">Tambah Saldo</Button>
-                      </Link>
-                      <Link href={`/dashboard/wallets/${wallet.id}/transactions`}>
-                        <Button size="sm" variant="outline" className="flex-1 text-xs sm:text-sm">Riwayat</Button>
-                      </Link>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         ) : (
           <Card className="neo-card-raised">
@@ -123,27 +128,27 @@ export default async function WalletsPage() {
 
         {/* Wallet Types Info */}
         <Card className="mt-8 neo-card-raised">
-          <CardHeader className="neo-yellow border-b-4 border-black">
-            <CardTitle className="neo-heading">🏦 Jenis Dompet</CardTitle>
+          <CardHeader className="neo-purple border-b-4 border-black">
+            <CardTitle className="neo-heading text-white">🏦 Jenis Dompet</CardTitle>
             <CardDescription className="neo-text">Penjelasan jenis-jenis dompet yang tersedia</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div className="text-center p-4 bg-white border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
+              <div className="text-center p-4 bg-blue-100 border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
                 <div className="text-3xl mb-2">🏦</div>
                 <h4 className="font-black">Bank</h4>
                 <p className="neo-text text-sm">
                   Akun bank seperti Seabank, BCA, Mandiri, dll
                 </p>
               </div>
-              <div className="text-center p-4 bg-white border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
+              <div className="text-center p-4 bg-green-100 border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
                 <div className="text-3xl mb-2">📱</div>
                 <h4 className="font-black">E-Wallet</h4>
                 <p className="neo-text text-sm">
                   Dompet digital seperti Gopay, OVO, Dana, ShopeePay
                 </p>
               </div>
-              <div className="text-center p-4 bg-white border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
+              <div className="text-center p-4 bg-pink-100 border-2 border-black shadow-[4px_4px_0px_black] neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
                 <div className="text-3xl mb-2">💵</div>
                 <h4 className="font-black">Cash</h4>
                 <p className="neo-text text-sm">

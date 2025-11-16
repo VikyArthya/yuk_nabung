@@ -76,7 +76,7 @@ export default function AddFundsForm({ walletId, currentBalance, walletName }: A
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div className="space-y-2">
-        <Label htmlFor="amount" className="text-sm font-medium">
+        <Label htmlFor="amount" className="text-sm font-bold">
           Jumlah Penambahan (Rp) *
         </Label>
         <Input
@@ -90,13 +90,13 @@ export default function AddFundsForm({ walletId, currentBalance, walletName }: A
           required
           className="neo-input"
         />
-        <p className="text-sm text-gray-500">
+        <p className="text-sm font-bold">
           Masukkan nominal yang ingin ditambahkan ke dompet
         </p>
       </div>
 
       {/* Current Balance Display */}
-      <div className="neo-blue text-white p-4 neo-border neo-shadow">
+      <div className="bg-blue-100 border-2 border-black shadow-[4px_4px_0px_black] p-4">
         <div className="flex justify-between items-center">
           <span className="text-sm font-black">Saldo Saat Ini:</span>
           <span className="font-black">
@@ -104,8 +104,8 @@ export default function AddFundsForm({ walletId, currentBalance, walletName }: A
           </span>
         </div>
         <div className="flex justify-between items-center mt-2">
-          <span className="text-sm font-medium text-blue-700">Setelah Penambahan:</span>
-          <span className="font-medium text-green-600">
+          <span className="text-sm font-black">Setelah Penambahan:</span>
+          <span className="font-black text-green-600">
             Rp {(currentBalance + (parseFloat(amount) || 0)).toLocaleString('id-ID')}
           </span>
         </div>
@@ -113,10 +113,10 @@ export default function AddFundsForm({ walletId, currentBalance, walletName }: A
 
       {message && (
         <div
-          className={`p-3 text-sm font-black ${
+          className={`p-4 border-2 border-black shadow-[4px_4px_0px_black] font-black text-sm ${
             message.type === "success"
-              ? "neo-green text-white neo-border neo-shadow"
-              : "neo-red text-white neo-border neo-shadow"
+              ? "bg-green-100 border-green-800 text-green-800"
+              : "bg-red-100 border-red-800 text-red-800"
           }`}
         >
           {message.text}
@@ -127,14 +127,14 @@ export default function AddFundsForm({ walletId, currentBalance, walletName }: A
         <Button
           type="submit"
           disabled={isLoading || !amount}
-          className="flex-1 neo-orange text-white"
+          className="flex-1 neo-orange text-white font-black text-lg py-3 px-6 neo-interactive"
           variant="default"
         >
           {isLoading ? "Memproses..." : "Tambah Saldo"}
         </Button>
         <Button
           type="button"
-          variant="outline"
+          className="neo-button"
           onClick={() => router.back()}
           disabled={isLoading}
         >

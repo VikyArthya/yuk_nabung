@@ -79,11 +79,11 @@ export default function TransactionList({ transactions, allocations, walletName 
   const getBadgeColor = (type: string) => {
     switch (type) {
       case 'expense':
-        return 'bg-red-100 text-red-700';
+        return 'neo-badge bg-red-100 text-red-700 border-red-600';
       case 'allocation':
-        return 'bg-green-100 text-green-700';
+        return 'neo-badge bg-green-100 text-green-700 border-green-600';
       default:
-        return 'bg-gray-100 text-gray-700';
+        return 'neo-badge bg-gray-100 text-gray-700 border-gray-600';
     }
   };
 
@@ -105,10 +105,10 @@ export default function TransactionList({ transactions, allocations, walletName 
 
   if (error) {
     return (
-      <Card className="border-red-100">
+      <Card className="neo-card-raised">
         <CardContent className="pt-6 text-center">
-          <p className="text-red-500">Gagal memuat data transaksi</p>
-          <Button onClick={() => setError(null)} variant="outline" size="sm" className="mt-2">
+          <p className="text-red-600 font-black">Gagal memuat data transaksi</p>
+          <Button onClick={() => setError(null)} className="neo-button mt-2" size="sm">
             Coba Lagi
           </Button>
         </CardContent>
@@ -119,24 +119,24 @@ export default function TransactionList({ transactions, allocations, walletName 
   return (
     <div className="space-y-6">
       {/* Tabs */}
-      <div className="border-b border-gray-200">
+      <div className="bg-white border-b-4 border-black">
         <nav className="-mb-px flex space-x-8">
           <button
             onClick={() => setActiveTab('expenses')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-3 px-4 border-b-4 font-black text-sm neo-interactive ${
               activeTab === 'expenses'
-                ? 'border-orange-500 text-orange-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-orange-600 bg-orange-100 text-orange-700'
+                : 'border-transparent bg-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-800'
             }`}
           >
             Pengeluaran ({transactions.length})
           </button>
           <button
             onClick={() => setActiveTab('allocations')}
-            className={`py-2 px-1 border-b-2 font-medium text-sm ${
+            className={`py-3 px-4 border-b-4 font-black text-sm neo-interactive ${
               activeTab === 'allocations'
-                ? 'border-orange-500 text-orange-600'
-                : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                ? 'border-green-600 bg-green-100 text-green-700'
+                : 'border-transparent bg-transparent text-gray-600 hover:bg-gray-100 hover:text-gray-800'
             }`}
           >
             Alokasi ({allocations.length})
@@ -148,7 +148,7 @@ export default function TransactionList({ transactions, allocations, walletName 
       {filteredTransactions.length > 0 ? (
         <div className="space-y-4">
           {filteredTransactions.map((transaction) => (
-            <Card key={transaction.id} className="hover:shadow-md transition-shadow border-orange-100">
+            <Card key={transaction.id} className="neo-card-raised neo-interactive hover:shadow-[6px_6px_0px_black] hover:translate-y-[-2px] hover:translate-x-[-2px]">
               <CardContent className="pt-4">
                 <div className="flex justify-between items-start space-x-4">
                   <div className="flex-1">
@@ -156,16 +156,16 @@ export default function TransactionList({ transactions, allocations, walletName 
                       <Badge className={getBadgeColor(transaction.badge)}>
                         {getBadgeText(transaction.badge)}
                       </Badge>
-                      <h4 className="font-medium text-gray-900">
+                      <h4 className="font-black text-gray-900">
                         {transaction.description}
                       </h4>
                     </div>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm font-bold">
                       {formatDate(transaction.date)}
                     </p>
                   </div>
                   <div className="text-right">
-                    <p className={`text-lg font-bold ${
+                    <p className={`text-lg font-black ${
                       transaction.type === 'expense' ? 'text-red-600' : 'text-green-600'
                     }`}>
                       {transaction.type === 'expense' ? '-' : '+'}
@@ -178,15 +178,15 @@ export default function TransactionList({ transactions, allocations, walletName 
           ))}
         </div>
       ) : (
-        <Card className="border-gray-200">
+        <Card className="neo-card-raised">
           <CardContent className="text-center py-12">
-            <div className="text-4xl mb-4 text-gray-400">
+            <div className="text-4xl mb-4">
               {activeTab === 'expenses' ? '📝' : '💰'}
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="text-lg font-black mb-2">
               Belum ada {activeTab === 'expenses' ? 'pengeluaran' : 'alokasi'}
             </h3>
-            <p className="text-gray-500 mb-6">
+            <p className="font-bold mb-6">
               {activeTab === 'expenses'
                 ? 'Belum ada transaksi pengeluaran untuk dompet ini'
                 : 'Belum ada alokasi budget untuk dompet ini'
@@ -194,7 +194,7 @@ export default function TransactionList({ transactions, allocations, walletName 
             </p>
             <Button
               onClick={() => window.history.back()}
-              className="border-orange-500 text-orange-500 hover:bg-orange-50"
+              className="neo-button"
             >
               Kembali
             </Button>
@@ -203,27 +203,27 @@ export default function TransactionList({ transactions, allocations, walletName 
       )}
 
       {/* Summary */}
-      <Card className="bg-gradient-to-r from-orange-50 to-yellow-50 border-orange-100">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-sm text-orange-700">📊 Ringkasan</CardTitle>
+      <Card className="neo-card-raised">
+        <CardHeader className="pb-3 sm:pb-6 neo-blue border-b-4 border-black">
+          <CardTitle className="text-sm neo-heading text-white">📊 Ringkasan</CardTitle>
         </CardHeader>
-        <CardContent className="pt-0">
+        <CardContent className="pt-0 sm:pt-0">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-            <div>
-              <p className="text-gray-600">Total Pengeluaran</p>
-              <p className="text-lg font-bold text-red-600">
+            <div className="bg-white border-2 border-black shadow-[4px_4px_0px_black] p-4">
+              <p className="text-xs font-bold">Total Pengeluaran</p>
+              <p className="text-lg sm:text-xl font-black text-red-600">
                 -Rp {totalExpenses.toLocaleString('id-ID')}
               </p>
             </div>
-            <div>
-              <p className="text-gray-600">Total Alokasi</p>
-              <p className="text-lg font-bold text-green-600">
+            <div className="bg-white border-2 border-black shadow-[4px_4px_0px_black] p-4">
+              <p className="text-xs font-bold">Total Alokasi</p>
+              <p className="text-lg sm:text-xl font-black text-green-600">
                 +Rp {totalAllocations.toLocaleString('id-ID')}
               </p>
             </div>
-            <div>
-              <p className="text-gray-600">Net Flow</p>
-              <p className={`text-lg font-bold ${
+            <div className="bg-white border-2 border-black shadow-[4px_4px_0px_black] p-4">
+              <p className="text-xs font-bold">Net Flow</p>
+              <p className={`text-lg sm:text-xl font-black ${
                 netFlow >= 0 ? 'text-green-600' : 'text-red-600'
               }`}>
                 Rp {netFlow.toLocaleString('id-ID')}
