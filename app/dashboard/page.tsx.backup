@@ -9,70 +9,6 @@ import { SignOutButton } from "@/components/auth/sign-out-button";
 import { ExpenseInputForm } from "@/components/expenses/expense-input-form";
 import { DailyExpensesList } from "@/components/expenses/daily-expenses-list";
 
-// Helper function untuk mengonversi angka ke terbilang bahasa Indonesia
-function numberToWords(amount: number): string {
-  if (amount === 0) return 'nol';
-
-  const units = ['', 'satu', 'dua', 'tiga', 'empat', 'lima', 'enam', 'tujuh', 'delapan', 'sembilan'];
-  const teens = ['sepuluh', 'sebelas', 'dua belas', 'tiga belas', 'empat belas', 'lima belas', 'enam belas', 'tujuh belas', 'delapan belas', 'sembilan belas'];
-  const tens = ['', 'sepuluh', 'dua puluh', 'tiga puluh', 'empat puluh', 'lima puluh', 'enam puluh', 'tujuh puluh', 'delapan puluh', 'sembilan puluh'];
-
-  function convertLessThanOneThousand(num: number): string {
-    if (num === 0) return '';
-
-    if (num < 10) {
-      return units[num];
-    } else if (num < 20) {
-      return teens[num - 10];
-    } else if (num < 100) {
-      const ten = Math.floor(num / 10);
-      const unit = num % 10;
-      return tens[ten] + (unit > 0 ? ' ' + units[unit] : '');
-    } else {
-      const hundred = Math.floor(num / 100);
-      const remainder = num % 100;
-      if (hundred === 1 && remainder === 0) {
-        return 'seratus';
-      } else if (hundred === 1) {
-        return 'seratus ' + convertLessThanOneThousand(remainder);
-      } else {
-        return units[hundred] + ' ratus' + (remainder > 0 ? ' ' + convertLessThanOneThousand(remainder) : '');
-      }
-    }
-  }
-
-  if (amount < 1000) {
-    return convertLessThanOneThousand(amount);
-  }
-
-  let result = '';
-  let divisor = 1000000000; // 1 miliar
-  const scale = ['miliar', 'juta', 'ribu', ''];
-
-  for (let i = 0; i < scale.length; i++) {
-    if (amount >= divisor) {
-      const portion = Math.floor(amount / divisor);
-      const remainder = amount % divisor;
-
-      if (scale[i] === 'ribu' && portion === 1) {
-        result += 'seribu';
-      } else {
-        result += convertLessThanOneThousand(portion) + ' ' + scale[i];
-      }
-
-      if (remainder > 0) {
-        result += ' ';
-        amount = remainder;
-      } else {
-        break;
-      }
-    }
-    divisor /= 1000;
-  }
-
-  return result.trim();
-}
-
 // Helper functions untuk week calculation (sama seperti di budget detail)
 function getWeekStart(date: Date): Date {
   const d = new Date(date);
@@ -564,8 +500,9 @@ export default async function DashboardPage() {
                 </CardContent>
               </Card>
             )}
-          </div>
-        </main>
+              </div>
+            </main>
+        </div>
       </div>
     );
   }
@@ -678,15 +615,15 @@ export default async function DashboardPage() {
             <CardHeader className="pb-3 sm:pb-6 neo-green">
               <CardTitle className="text-base sm:text-lg neo-heading text-white">💳 Total Tabungan</CardTitle>
               <CardDescription className="text-xs sm:text-sm neo-text text-white">
-                Akumulasi dari sisa budget bulan ini
+                Akumulasi dari sisa budget
               </CardDescription>
             </CardHeader>
             <CardContent className="pt-0 sm:pt-0">
               <div className="text-xl sm:text-2xl font-black text-black break-all">
                 Rp {dashboardData.user.savingsBalance.toLocaleString('id-ID')}
               </div>
-              <p className="text-xs sm:text-sm neo-text mt-1 first-letter:uppercase">
-                {numberToWords(dashboardData.user.savingsBalance)} rupiah
+              <p className="text-xs sm:text-sm neo-text mt-1">
+                {dashboardData.weekly?.transferredToSavings ? "Sudah ditransfer minggu ini" : "Menunggu transfer mingguan"}
               </p>
             </CardContent>
           </Card>

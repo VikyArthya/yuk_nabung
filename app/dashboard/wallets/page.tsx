@@ -1,29 +1,113 @@
-import { getServerSession } from "next-auth";
-import { redirect } from "next/navigation";
-import { authOptions } from "@/lib/auth";
-import { prisma } from "@/lib/prisma";
+"use client";
+
+import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SignOutButton } from "@/components/auth/sign-out-button";
 
-export default async function WalletsPage() {
-  const session = await getServerSession(authOptions);
+interface Wallet {
+  id: string;
+  name: string;
+  type: string;
+  balance: number;
+  createdAt: string;
+}
 
-  if (!session) {
-    redirect("/login");
-  }
+export default function WalletsPage() {
+  const { data: session, status } = useSession();
+  const router = useRouter();
+  const [wallets, setWallets] = useState<Wallet[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  const wallets = await prisma.wallet.findMany({
-    where: {
-      userId: session.user.id,
-    },
-    orderBy: {
-      createdAt: 'desc',
-    },
-  });
+  useEffect(() => {
+    if (status === "loading") {
+      setIsLoading(true);
+      return;
+    }
+
+    if (status === "unauthenticated") {
+      router.push("/login");
+      return;
+    }
+
+    if (session) {
+      const fetchWallets = async () => {
+        try {
+          const response = await fetch("/api/wallets/user");
+          if (!response.ok) {
+            throw new Error("Failed to fetch wallets");
+          }
+          const data = await response.json();
+          setWallets(data);
+        } catch (err) {
+          setError(err instanceof Error ? err.message : "An error occurred");
+        } finally {
+          setIsLoading(false);
+        }
+      };
+
+      fetchWallets();
+    }
+  }, [session, status, router]);
 
   const totalBalance = wallets.reduce((total, wallet) => total + Number(wallet.balance), 0);
+
+  const handleDeleteWallet = async (walletId: string) => {
+    if (!confirm("Apakah Anda yakin ingin menghapus dompet ini?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/wallets/${walletId}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        throw new Error(data.error || "Failed to delete wallet");
+      }
+
+      // Refresh wallets list
+      const walletsResponse = await fetch("/api/wallets/user");
+      if (walletsResponse.ok) {
+        const updatedWallets = await walletsResponse.json();
+        setWallets(updatedWallets);
+      }
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "An error occurred");
+    }
+  };
+
+  if (status === "loading" || isLoading) {
+    return (
+      <div className="neo-yellow min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">⏳</div>
+          <p className="neo-text">Memuat data dompet...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="neo-yellow min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="text-4xl mb-4">❌</div>
+          <p className="neo-text text-red-600 mb-4">{error}</p>
+          <Button onClick={() => window.location.reload()} className="neo-gray">Coba Lagi</Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (status === "unauthenticated") {
+    return null; // Will redirect
+  }
 
   return (
     <div className="neo-yellow min-h-screen">
@@ -95,13 +179,28 @@ export default async function WalletsPage() {
                       <div className="text-lg sm:text-xl sm:text-2xl font-black break-all">
                         Rp {Number(wallet.balance).toLocaleString('id-ID')}
                       </div>
-                      <div className="flex space-x-2">
-                        <Link href={`/dashboard/wallets/${wallet.id}/add-funds`}>
-                          <Button size="sm" className="flex-1 text-xs sm:text-sm neo-orange text-white">Tambah Saldo</Button>
-                        </Link>
-                        <Link href={`/dashboard/wallets/${wallet.id}/transactions`}>
-                          <Button size="sm" variant="outline" className="flex-1 text-xs sm:text-sm">Riwayat</Button>
-                        </Link>
+                      <div className="space-y-2">
+                        <div className="flex space-x-2">
+                          <Link href={`/dashboard/wallets/${wallet.id}/add-funds`}>
+                            <Button size="sm" className="flex-1 text-xs sm:text-sm neo-orange text-white">Tambah Saldo</Button>
+                          </Link>
+                          <Link href={`/dashboard/wallets/${wallet.id}/transactions`}>
+                            <Button size="sm" variant="outline" className="flex-1 text-xs sm:text-sm neo-gray">Riwayat</Button>
+                          </Link>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Link href={`/dashboard/wallets/${wallet.id}/edit`}>
+                            <Button size="sm" variant="outline" className="flex-1 text-xs sm:text-sm neo-blue">✏️ Edit</Button>
+                          </Link>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="flex-1 text-xs sm:text-sm neo-red hover:text-white hover:bg-red-600"
+                            onClick={() => handleDeleteWallet(wallet.id)}
+                          >
+                            🗑️ Hapus
+                          </Button>
+                        </div>
                       </div>
                     </div>
                   </CardContent>

@@ -31,6 +31,82 @@ export default async function CreateBudgetPage() {
     balance: Number(wallet.balance),
   }));
 
+  // Check if user has any wallets - if not, redirect to wallet creation
+  if (userWallets.length === 0) {
+    return (
+      <div className="min-h-screen neo-yellow">
+        {/* Header */}
+        <header className="bg-white border-b-4 border-black">
+          <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+            <div className="flex justify-between items-center">
+              <div className="flex items-center space-x-4">
+                <Link href="/dashboard/budget">
+                  <Button variant="outline">← Kembali</Button>
+                </Link>
+                <h1 className="neo-heading text-3xl sm:text-5xl">
+                  Buat Budget Baru
+                </h1>
+              </div>
+              <SignOutButton />
+            </div>
+          </div>
+        </header>
+
+        {/* Main Content - No Wallets Warning */}
+        <main className="max-w-4xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+          <Card className="neo-card-raised">
+            <CardHeader className="neo-red border-b-4 border-black">
+              <div className="text-center space-y-4">
+                <div className="text-6xl">💳</div>
+                <div>
+                  <CardTitle className="neo-heading text-2xl text-white">
+                    Buat Dompet Terlebih Dahulu
+                  </CardTitle>
+                  <CardDescription className="neo-text mt-2 text-white">
+                    Anda perlu membuat dompet sebelum dapat membuat budget
+                  </CardDescription>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="pt-0 sm:pt-0">
+              <div className="text-center space-y-6">
+                <div className="bg-red-50 border-2 border-black shadow-[4px_4px_0px_black] p-6">
+                  <h3 className="font-black mb-4 text-red-800">Mengapa Perlu Dompet?</h3>
+                  <ul className="neo-text text-sm space-y-2 text-left font-bold">
+                    <li>• Untuk mengalokasikan budget ke sumber dana yang berbeda</li>
+                    <li>• Melacak saldo di berbagai dompet (bank, e-wallet, cash)</li>
+                    <li>• Kontrol pengeluaran berdasarkan dompet yang digunakan</li>
+                    <li>• Manajemen keuangan yang lebih terstruktur</li>
+                  </ul>
+                </div>
+
+                <div className="space-y-4">
+                  <Link href="/dashboard/wallets/create">
+                    <Button className="w-full neo-blue text-white text-lg py-3 px-6">
+                      💳 Buat Dompet Pertama
+                    </Button>
+                  </Link>
+                  <p className="neo-text text-sm">
+                    Atau kelola dompet yang ada di{' '}
+                    <Link href="/dashboard/wallets" className="text-blue-600 hover:underline">
+                      menu dompet
+                    </Link>
+                  </p>
+                  <p className="neo-text text-sm">
+                    Kembali ke{' '}
+                    <Link href="/dashboard/budget" className="text-orange-600 hover:underline">
+                      dashboard budget
+                    </Link>
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
+    );
+  }
+
   const currentDate = new Date();
   const currentMonth = currentDate.getMonth() + 1;
   const currentYear = currentDate.getFullYear();
