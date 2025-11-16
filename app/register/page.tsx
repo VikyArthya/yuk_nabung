@@ -51,10 +51,8 @@ export default function RegisterPage() {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess("Akun berhasil dibuat! Mengalihkan ke halaman login...");
-        setTimeout(() => {
-          router.push("/login");
-        }, 2000);
+        setSuccess(`📧 Akun berhasil dibuat! Link verifikasi telah dikirim ke ${email}. Silakan periksa inbox Anda termasuk folder spam.`);
+        // Tidak langsung redirect, user harus verifikasi email dulu
       } else {
         setError(data.error || "Terjadi kesalahan saat mendaftar");
       }

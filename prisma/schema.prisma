@@ -58,6 +58,8 @@ model User {
   password         String?   // For local authentication
   emailVerified    DateTime?
   image            String?
+  emailVerificationToken   String?  @map("email_verification_token") // Token for email verification
+  emailVerificationExpires DateTime? @map("email_verification_expires") // Token expiry time
   dailyBudget      Decimal   @default(20000) @map("daily_budget") // Daily meal budget (default: 20k)
   savingsBalance   Decimal   @default(0) @map("savings_balance") // Automatic savings from leftovers
   manualSavings    Decimal   @default(0) @map("manual_savings") // Manual savings topups

@@ -28,7 +28,12 @@ export default function LoginPage() {
       });
 
       if (result?.error) {
-        setError("Email atau password salah");
+        // Check if error is about email verification
+        if (result.error.includes("verify your email")) {
+          setError("📧 Silakan verifikasi email Anda terlebih dahulu. Periksa inbox Anda termasuk folder spam.");
+        } else {
+          setError("Email atau password salah");
+        }
       } else {
         router.push("/dashboard");
         router.refresh();
